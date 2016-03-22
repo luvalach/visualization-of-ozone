@@ -1,0 +1,49 @@
+<header ng-switch on="$location.path().indexOf('/Measurements/new') > -1">
+    <h3 ng-switch-when="true">Create a new Measurement</h3>
+    <h3 ng-switch-when="false">View or edit Measurement</h3>
+</header>
+<form id="MeasurementForm" name="MeasurementForm" class="form-horizontal" role="form">
+    
+	<div class="form-group" ng-class="{'has-error': MeasurementForm.station.$invalid}">
+        <label for="station" class="col-sm-2 control-label">Station</label>
+        <div id="stationControls" class="col-sm-10">
+        <select id="station" name="station" class="form-control" ng-disabled="updateMode" ng-model="stationSelection" ng-options="s.text for s in stationSelectionList"  >
+            <option value="">Choose a Station</option>
+        </select>
+        </div>
+    </div>
+	
+	<div class="form-group" ng-class="{'has-error': MeasurementForm.phenomenonType.$invalid}">
+        <label for="phenomenonType" class="col-sm-2 control-label">Phenomenon Type</label>
+        <div id="phenomenonTypeControls" class="col-sm-10">
+        <select id="phenomenonType" name="phenomenonType" class="form-control" ng-disabled="updateMode" ng-model="phenomenonTypeSelection" ng-options="s.text for s in phenomenonTypeSelectionList"  >
+            <option value="">Choose a PhenomenonType</option>
+        </select>
+        </div>
+    </div>
+    
+    <div class="form-group" ng-class="{'has-error': MeasurementForm.dateTime.$invalid}">
+        <label for="dateTime" class="col-sm-2 control-label">Date and Time</label>
+        <div id="dateTimeControls" class="col-sm-10">
+            <datetime id="dateTime" name="dateTime" ng-disabled="updateMode" ng-model="measurement.dateTime" placeholder="Enter the Date and Time of Measurement"></datetime>
+            <span class="help-block error" ng-show="MeasurementForm.dateTime.$error.datetimeFormat">does not match format "yyyy-MM-dd hh:mm:ss" (e.g. 2013-12-01 22:00:00)</span>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': MeasurementForm.value.$invalid}">
+        <label for="value" class="col-sm-2 control-label">Value</label>
+        <div id="valueControls" class="col-sm-10">
+            <input id="value" name="value" type="number" class="form-control" ng-model="measurement.value" placeholder="Enter the Measurement Value"></input>
+            <span class="help-block error" ng-show="MeasurementForm.value.$error.number">not a number</span>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button id="saveMeasurement" name="saveMeasurement" class="btn btn-primary" ng-disabled="isClean() || MeasurementForm.$invalid" ng-click="save()"><span class="glyphicon glyphicon-ok-sign"></span> Save</button>
+            <button id="cancel" name="cancel" class="btn btn-default" ng-click="cancel()"><span class="glyphicon glyphicon-remove-sign"></span> Cancel</button>
+            <button id="deleteMeasurement" name="deleteMeasurement" class="btn btn-danger" ng-show="measurement.dateTime" ng-click="remove()"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+        </div>
+    </div>
+</form>

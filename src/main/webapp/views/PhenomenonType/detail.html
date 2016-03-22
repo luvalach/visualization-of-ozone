@@ -1,0 +1,67 @@
+<header ng-switch on="$location.path().indexOf('/PhenomenonTypes/new') > -1">
+    <h3 ng-switch-when="true">Create a new PhenomenonType</h3>
+    <h3 ng-switch-when="false">View or edit PhenomenonType</h3>
+</header>
+<form id="PhenomenonTypeForm" name="PhenomenonTypeForm" class="form-horizontal" role="form">
+    
+    <div class="form-group" ng-class="{'has-error': PhenomenonTypeForm.name.$invalid}">
+        <label for="name" class="col-sm-2 control-label">Name</label>
+        <div id="nameControls" class="col-sm-10">
+            <input id="name" name="name" type="text" class="form-control" ng-model="phenomenonType.name" placeholder="Enter the PhenomenonType Name"></input>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': PhenomenonTypeForm.nameShortcut.$invalid}">
+        <label for="nameShortcut" class="col-sm-2 control-label">Name Shortcut</label>
+        <div id="nameShortcutControls" class="col-sm-10">
+            <input id="nameShortcut" name="nameShortcut" type="text" class="form-control" ng-model="phenomenonType.nameShortcut" placeholder="Enter the PhenomenonType Name Shortcut"></input>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': PhenomenonTypeForm.source.$invalid}">
+        <label for="source" class="col-sm-2 control-label">Source</label>
+        <div id="sourceControls" class="col-sm-10">
+        <select id="source" name="source" class="form-control" ng-model="sourceSelection" ng-options="s.text for s in sourceSelectionList"  >
+            <option value="">Choose a Source</option>
+        </select>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': PhenomenonTypeForm.columnNo.$invalid}">
+        <label for="columnNo" class="col-sm-2 control-label">Column No</label>
+        <div id="columnNoControls" class="col-sm-10">
+            <input id="columnNo" name="columnNo" type="number" class="form-control" ng-model="phenomenonType.columnNo" placeholder="Enter the PhenomenonType Column No"></input>
+            <span class="help-block error" ng-show="PhenomenonTypeForm.columnNo.$error.number">not a number</span>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': PhenomenonTypeForm.unit.$invalid}">
+        <label for="unit" class="col-sm-2 control-label">Unit</label>
+        <div id="unitControls" class="col-sm-10">
+            <input id="unit" name="unit" type="text" class="form-control" ng-model="phenomenonType.unit" placeholder="Enter the PhenomenonType Unit"></input>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': PhenomenonTypeForm.unitShortcut.$invalid}">
+        <label for="unitShortcut" class="col-sm-2 control-label">Unit Shortcut</label>
+        <div id="unitShortcutControls" class="col-sm-10">
+            <input id="unitShortcut" name="unitShortcut" type="text" class="form-control" ng-model="phenomenonType.unitShortcut" placeholder="Enter the PhenomenonType Unit Shortcut"></input>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': PhenomenonTypeForm.description.$invalid}">
+        <label for="description" class="col-sm-2 control-label">Description</label>
+        <div id="descriptionControls" class="col-sm-10">
+            <input id="description" name="description" type="text" class="form-control" ng-model="phenomenonType.description" placeholder="Enter the PhenomenonType Description"></input>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button id="savePhenomenonType" name="savePhenomenonType" class="btn btn-primary" ng-disabled="isClean() || PhenomenonTypeForm.$invalid" ng-click="save()"><span class="glyphicon glyphicon-ok-sign"></span> Save</button>
+            <button id="cancel" name="cancel" class="btn btn-default" ng-click="cancel()"><span class="glyphicon glyphicon-remove-sign"></span> Cancel</button>
+            <button id="deletePhenomenonType" name="deletePhenomenonType" class="btn btn-danger" ng-show="phenomenonType.id" ng-click="remove()"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+        </div>
+    </div>
+</form>

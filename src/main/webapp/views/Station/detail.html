@@ -1,0 +1,60 @@
+<header ng-switch on="$location.path().indexOf('/Stations/new') > -1">
+    <h3 ng-switch-when="true">Create a new Station</h3>
+    <h3 ng-switch-when="false">View or edit Station</h3>
+</header>
+<form id="StationForm" name="StationForm" class="form-horizontal" role="form">
+    
+    <div class="form-group" ng-class="{'has-error': StationForm.name.$invalid}">
+        <label for="name" class="col-sm-2 control-label">Name</label>
+        <div id="nameControls" class="col-sm-10">
+            <input id="name" name="name" type="text" class="form-control" ng-model="station.name" placeholder="Enter the Station Name"></input>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': StationForm.country.$invalid}">
+        <label for="country" class="col-sm-2 control-label">Country</label>
+        <div id="countryControls" class="col-sm-10">
+            <input id="country" name="country" type="text" class="form-control" ng-model="station.country" placeholder="Enter the Station Country"></input>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': StationForm.fileName.$invalid}">
+        <label for="fileName" class="col-sm-2 control-label">File Name</label>
+        <div id="fileNameControls" class="col-sm-10">
+            <input id="fileName" name="fileName" type="text" class="form-control" ng-model="station.fileName" placeholder="Enter the Station File Name"></input>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': StationForm.latitude.$invalid}">
+        <label for="latitude" class="col-sm-2 control-label">Latitude</label>
+        <div id="latitudeControls" class="col-sm-10">
+            <input id="latitude" name="latitude" type="number" class="form-control" ng-model="station.latitude" placeholder="Enter the Station Latitude"></input>
+            <span class="help-block error" ng-show="StationForm.latitude.$error.number">not a number</span>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': StationForm.longitude.$invalid}">
+        <label for="longitude" class="col-sm-2 control-label">Longitude</label>
+        <div id="longitudeControls" class="col-sm-10">
+            <input id="longitude" name="longitude" type="number" class="form-control" ng-model="station.longitude" placeholder="Enter the Station Longitude"></input>
+            <span class="help-block error" ng-show="StationForm.longitude.$error.number">not a number</span>
+        </div>
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': StationForm.lastUpdate.$invalid}">
+        <label for="lastUpdate" class="col-sm-2 control-label">Last Update</label>
+        <div id="lastUpdateControls" class="col-sm-10">
+            <datetime id="lastUpdate" name="lastUpdate" ng-model="station.lastUpdate" placeholder="Enter the Station Last Update"></datetime>
+            <span class="help-block error" ng-show="StationForm.lastUpdate.$error.datetimeFormat">does not match format "yyyy-MM-dd hh:mm:ss" (e.g. 2013-12-01 22:00:00)</span>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button id="saveStation" name="saveStation" class="btn btn-primary" ng-disabled="isClean() || StationForm.$invalid" ng-click="save()"><span class="glyphicon glyphicon-ok-sign"></span> Save</button>
+            <button id="cancel" name="cancel" class="btn btn-default" ng-click="cancel()"><span class="glyphicon glyphicon-remove-sign"></span> Cancel</button>
+            <button id="deleteStation" name="deleteStation" class="btn btn-danger" ng-show="station.id" ng-click="remove()"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+        </div>
+    </div>
+</form>
