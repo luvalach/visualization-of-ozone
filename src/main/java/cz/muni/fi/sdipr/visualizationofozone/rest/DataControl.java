@@ -8,13 +8,14 @@ import javax.ws.rs.core.Response;
 
 import cz.muni.fi.sdipr.visualizationofozone.dao.MeasurementDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.StationDao;
+import cz.muni.fi.sdipr.visualizationofozone.impl.DownloadManager;
 
 @Stateless
 @Path("/datacontrols")
 public class DataControl {
 
-	// @EJB
-	// private DownloadManager dm;
+	@EJB
+	private DownloadManager dm;
 
 	@EJB
 	private StationDao stationDao;
@@ -25,7 +26,7 @@ public class DataControl {
 	@GET
 	@Path("/update")
 	public Response updateDB() {
-		// dm.refreshDatabase();
+		dm.refreshDatabase();
 		return Response.noContent().build();
 	}
 
