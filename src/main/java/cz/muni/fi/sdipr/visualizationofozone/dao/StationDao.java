@@ -5,11 +5,13 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
 import cz.muni.fi.sdipr.visualizationofozone.model.Station;
 
 /**
- *  DAO for Station
+ * DAO for Station
  */
 @Stateless
 public class StationDao {
@@ -36,15 +38,23 @@ public class StationDao {
 	}
 
 	public List<Station> listAll(Integer startPosition, Integer maxResult) {
-		TypedQuery<Station> findAllQuery = em
-				.createQuery("SELECT DISTINCT s FROM Station s ORDER BY s.id",
-						Station.class);
+		TypedQuery<Station> q = em.createNamedQuery("Station.listAll", Station.class);
 		if (startPosition != null) {
-			findAllQuery.setFirstResult(startPosition);
+			q.setFirstResult(startPosition);
 		}
 		if (maxResult != null) {
-			findAllQuery.setMaxResults(maxResult);
+			q.setMaxResults(maxResult);
 		}
-		return findAllQuery.getResultList();
+		return q.getResultList();
+	}
+
+	public List<Long> getAllIds() {
+		TypedQuery<Long> q = em.createNamedQuery("Station.getAllIds", Long.class);
+		return q.getResultList();
+	}
+
+	public void deleteAll() {
+		Query q = em.createNamedQuery("Station.deleteAll");
+		q.executeUpdate();
 	}
 }

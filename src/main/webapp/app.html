@@ -34,9 +34,10 @@
                     </a>
                     <nav class="sidebar-nav" ng-controller="NavController" role="navigation">
                         <div id="sidebar-entries" class="list-group">
-                        	<a class="list-group-item" ng-class="{active: matchesRoute('FileUpdates')}" href="#/FileUpdates" data-toggle="offcanvas">FileUpdates</a>
+                        	<a class="list-group-item" ng-class="{active: matchesRoute('DataControls')}" href="#/DataControls" data-toggle="offcanvas">Data controls</a>
+                        	<a class="list-group-item" ng-class="{active: matchesRoute('FileUpdates')}" href="#/FileUpdates" data-toggle="offcanvas">File Updates</a>
                         	<a class="list-group-item" ng-class="{active: matchesRoute('Measurements')}" href="#/Measurements" data-toggle="offcanvas">Measurements</a>
-                        	<a class="list-group-item" ng-class="{active: matchesRoute('PhenomenonTypes')}" href="#/PhenomenonTypes" data-toggle="offcanvas">PhenomenonTypes</a>
+                        	<a class="list-group-item" ng-class="{active: matchesRoute('PhenomenonTypes')}" href="#/PhenomenonTypes" data-toggle="offcanvas">Phenomenon Types</a>
                         	<a class="list-group-item" ng-class="{active: matchesRoute('Sources')}" href="#/Sources" data-toggle="offcanvas">Sources</a>
                         	<a class="list-group-item" ng-class="{active: matchesRoute('Stations')}" href="#/Stations" data-toggle="offcanvas">Stations</a>
                         </div>
@@ -98,5 +99,6 @@
     <script src="scripts/controllers/newStationController.js"></script>
     <script src="scripts/controllers/searchStationController.js"></script>
     <script src="scripts/controllers/editStationController.js"></script>
+    <script src="scripts/controllers/dataControlController.js"></script>
 </body>
 </html>

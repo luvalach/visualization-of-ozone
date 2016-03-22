@@ -19,6 +19,7 @@ angular.module('visualizationofozone',['ngRoute','ngResource'])
       .when('/Stations',{templateUrl:'views/Station/search.html',controller:'SearchStationController'})
       .when('/Stations/new',{templateUrl:'views/Station/detail.html',controller:'NewStationController'})
       .when('/Stations/edit/:StationId',{templateUrl:'views/Station/detail.html',controller:'EditStationController'})
+      .when('/DataControls',{templateUrl:'views/DataControl/dataControl.html',controller:'DataControlController'})
       .otherwise({
         redirectTo: '/'
       });

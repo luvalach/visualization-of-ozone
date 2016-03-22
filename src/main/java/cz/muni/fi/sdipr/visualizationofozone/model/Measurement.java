@@ -18,7 +18,11 @@ import javax.persistence.Table;
 @Table(name = "Measurements")
 @IdClass(MeasurementKey.class)
 @NamedQueries({
-		@NamedQuery(name = "Measurement.getByIdClass", query = "SELECT m FROM Measurement m WHERE m.dateTime = :dateTime AND m.phenomenonTypeId = :phenomenonTypeId AND m.stationId = :stationId") })
+		@NamedQuery(name = "Measurement.getByIdClass", query = "SELECT m FROM Measurement m WHERE m.dateTime = :dateTime AND m.phenomenonTypeId = :phenomenonTypeId AND m.stationId = :stationId"),
+		@NamedQuery(name = "Measurement.listAll", query = "SELECT DISTINCT m FROM Measurement m ORDER BY m.dateTime DESC, m.stationId, m.phenomenonTypeId"),
+		@NamedQuery(name = "Measurement.findByDates", query = "SELECT DISTINCT m FROM Measurement m WHERE m.dateTime BETWEEN :fromDate AND :toDate ORDER BY m.stationId, m.phenomenonTypeId, m.dateTime"),
+		@NamedQuery(name = "Measurement.findByStationPhenomenonDates", query = "SELECT DISTINCT m FROM Measurement m WHERE m.stationId = :stationId AND m.phenomenonTypeId = :phenomenonTypeId AND(m.dateTime BETWEEN :fromDate AND :toDate) ORDER BY m.dateTime"),
+		@NamedQuery(name = "Measurement.deleteAll", query = "DELETE FROM Measurement") })
 public class Measurement implements Serializable {
 
 	@Id

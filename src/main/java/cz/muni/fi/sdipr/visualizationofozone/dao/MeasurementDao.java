@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
@@ -53,20 +54,40 @@ public class MeasurementDao {
 		return q.getSingleResult();
 	}
 
+	public List<Measurement> findByStationPhenomenonDates(Long stationId, Long phenomenonTypeId, Date fromDate,
+			Date toDate) {
+		TypedQuery<Measurement> q = em.createNamedQuery("Measurement.findByStationPhenomenonDates", Measurement.class);
+		q.setParameter("stationId", stationId);
+		q.setParameter("phenomenonTypeId", phenomenonTypeId);
+		q.setParameter("fromDate", fromDate);
+		q.setParameter("toDate", toDate);
+		return q.getResultList();
+	}
+
+	public List<Measurement> findByDates(Date fromDate, Date toDate) {
+		TypedQuery<Measurement> q = em.createNamedQuery("Measurement.findByDates", Measurement.class);
+		q.setParameter("fromDate", fromDate);
+		q.setParameter("toDate", toDate);
+		return q.getResultList();
+	}
+
 	public Measurement update(Measurement entity) {
 		return em.merge(entity);
 	}
 
 	public List<Measurement> listAll(Integer startPosition, Integer maxResult) {
-		TypedQuery<Measurement> findAllQuery = em.createQuery(
-				"SELECT DISTINCT m FROM Measurement m ORDER BY m.dateTime, m.stationId, m.phenomenonTypeId",
-				Measurement.class);
+		TypedQuery<Measurement> q = em.createNamedQuery("Measurement.listAll", Measurement.class);
 		if (startPosition != null) {
-			findAllQuery.setFirstResult(startPosition);
+			q.setFirstResult(startPosition);
 		}
 		if (maxResult != null) {
-			findAllQuery.setMaxResults(maxResult);
+			q.setMaxResults(maxResult);
 		}
-		return findAllQuery.getResultList();
+		return q.getResultList();
+	}
+
+	public void deleteAll() {
+		Query q = em.createNamedQuery("Measurement.deleteAll");
+		q.executeUpdate();
 	}
 }
