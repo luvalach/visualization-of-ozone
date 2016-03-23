@@ -6,6 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+import cz.muni.fi.sdipr.visualizationofozone.dao.FileUpdateDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.MeasurementDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.StationDao;
 import cz.muni.fi.sdipr.visualizationofozone.impl.DownloadManager;
@@ -23,6 +24,9 @@ public class DataControl {
 	@EJB
 	private MeasurementDao measurementDao;
 
+	@EJB
+	private FileUpdateDao fileUpdateDao;
+
 	@GET
 	@Path("/update")
 	public Response updateDB() {
@@ -34,6 +38,7 @@ public class DataControl {
 	@Path("/clean")
 	public Response cleanDB() {
 		measurementDao.deleteAll();
+		fileUpdateDao.deleteAll();
 		stationDao.deleteAll();
 		return Response.noContent().build();
 	}

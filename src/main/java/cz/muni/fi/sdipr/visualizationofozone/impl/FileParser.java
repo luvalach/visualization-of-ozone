@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 
+import cz.muni.fi.sdipr.visualizationofozone.model.FileUpdate;
 import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
 import cz.muni.fi.sdipr.visualizationofozone.model.PhenomenonType;
 import cz.muni.fi.sdipr.visualizationofozone.model.Source;
@@ -34,18 +35,20 @@ public class FileParser {
 	private SimpleDateFormat simpleDateFormat;
 	private BufferedReader reader;
 	private Source source;
+	private FileUpdate fileUpdate;
 
 	public FileParser() {
 		simpleDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS'Z'");
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
 
-	public void parseFile(InputStream inputStream, Station station, List<Measurement> measurements, Source source)
-			throws IOException, IllegalArgumentException {
+	public void parseFile(InputStream inputStream, Station station, List<Measurement> measurements, Source source,
+			FileUpdate fileUpdate) throws IOException, IllegalArgumentException {
 		this.reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 		this.measurements = measurements;
 		this.station = station;
 		this.source = source;
+		this.fileUpdate = fileUpdate;
 
 		parseHeaderLine();
 
@@ -150,17 +153,23 @@ public class FileParser {
 			throw new IllegalArgumentException("Can't convert string to Date. String: " + splitedLine[0]);
 		}
 
-		List<Measurement> measurementsOnRow = new ArrayList<Measurement>();
+		if (dateTime.getTime() > this.fileUpdate.getLastRowDate().getTime()) {
+			List<Measurement> measurementsOnRow = new ArrayList<Measurement>();
 
-		for (PhenomenonType phenomenon : source.getPhenomenonType()) {
-			Measurement measurement = new Measurement();
-			measurement.setDateTime(dateTime);
-			measurement.setPhenomenonTypeId(phenomenon.getId());
-			measurement.setStationId(station.getId());
-			measurement.setValue(Float.parseFloat(splitedLine[phenomenon.getColumnNo()]));
-			measurementsOnRow.add(measurement);
+			for (PhenomenonType phenomenon : source.getPhenomenonType()) {
+				Measurement measurement = new Measurement();
+				measurement.setDateTime(dateTime);
+				measurement.setPhenomenonTypeId(phenomenon.getId());
+				measurement.setStationId(station.getId());
+				measurement.setValue(Float.parseFloat(splitedLine[phenomenon.getColumnNo()]));
+				measurementsOnRow.add(measurement);
+			}
+
+			fileUpdate.setLastRowDate(dateTime);
+			return measurementsOnRow;
+		} else {
+			return null;
 		}
 
-		return measurementsOnRow;
 	}
 }

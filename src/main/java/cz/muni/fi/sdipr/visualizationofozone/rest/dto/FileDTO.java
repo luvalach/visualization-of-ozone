@@ -11,6 +11,7 @@ import cz.muni.fi.sdipr.visualizationofozone.model.Source;
 public class FileDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private Long id;
 	private Date dateOfRequestCreation;
 	private String fileName;
 	private Source source;
@@ -24,6 +25,14 @@ public class FileDTO implements Serializable {
 
 	public FileDTO(String fileName, Source source) {
 		this(Calendar.getInstance().getTime(), fileName, source);
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Date getDateOfRequestCreation() {

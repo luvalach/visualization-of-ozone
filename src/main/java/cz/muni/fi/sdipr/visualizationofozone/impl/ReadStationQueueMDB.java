@@ -3,6 +3,8 @@ package cz.muni.fi.sdipr.visualizationofozone.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -14,8 +16,10 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
+import cz.muni.fi.sdipr.visualizationofozone.dao.FileUpdateDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.MeasurementDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.StationDao;
+import cz.muni.fi.sdipr.visualizationofozone.model.FileUpdate;
 import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
 import cz.muni.fi.sdipr.visualizationofozone.model.Station;
 import cz.muni.fi.sdipr.visualizationofozone.rest.dto.FileDTO;
@@ -27,6 +31,7 @@ import cz.muni.fi.sdipr.visualizationofozone.rest.dto.FileDTO;
 public class ReadStationQueueMDB implements MessageListener {
 
 	private final static Logger LOGGER = Logger.getLogger(ReadStationQueueMDB.class.toString());
+	private static Date zeroDate;
 
 	@EJB
 	private StationDao stationDao;
@@ -36,6 +41,9 @@ public class ReadStationQueueMDB implements MessageListener {
 
 	@EJB
 	private FileParser fileParser;
+
+	@EJB
+	private FileUpdateDao fileUpdateDao;
 
 	@Override
 	public void onMessage(Message rcvMessage) {
@@ -82,16 +90,45 @@ public class ReadStationQueueMDB implements MessageListener {
 				stationDao.create(station);
 			}
 
-			fileParser.parseFile(is, station, measurements, fileDto.getSource());
+			FileUpdate fileUpdate = fileUpdateDao.findById(fileDto.getSource().getId(), station.getId());
+			if (fileUpdate == null) {
+				fileUpdate = new FileUpdate();
+				fileUpdate.setStationId(station.getId());
+				fileUpdate.setSourceId(fileDto.getSource().getId());
+				fileUpdate.setLastUpdate(this.getZeroDate());
+				fileUpdate.setLastRowDate(this.getZeroDate());
+				fileUpdateDao.create(fileUpdate);
+			}
+
+			fileParser.parseFile(is, station, measurements, fileDto.getSource(), fileUpdate);
 
 			stationDao.update(station);
+
+			fileUpdate.setLastUpdate(Calendar.getInstance().getTime());
+			fileUpdateDao.update(fileUpdate);
 
 			for (Measurement measurement : measurements) {
 				measurementDao.create(measurement);
 			}
+
 			LOGGER.info("Download of file " + fileDto.getFileName() + " success. Added measuremets: "
 					+ measurements.size());
 		}
+	}
+
+	/**
+	 * Return date of start of the epoch. Date should be older that all
+	 * measurements.
+	 * 
+	 * @return date of start of the epoch.
+	 */
+	private Date getZeroDate() {
+		if (ReadStationQueueMDB.zeroDate == null) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(0L);
+			ReadStationQueueMDB.zeroDate = calendar.getTime();
+		}
+		return ReadStationQueueMDB.zeroDate;
 	}
 }
 // vycisteni jms queue

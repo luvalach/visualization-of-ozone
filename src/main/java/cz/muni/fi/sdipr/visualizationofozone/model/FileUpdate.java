@@ -18,7 +18,8 @@ import javax.persistence.Table;
 @Table(name = "FileUpdates")
 @IdClass(FileUpdateKey.class)
 @NamedQueries({
-		@NamedQuery(name = "FileUpdate.getByIdClass", query = "SELECT f FROM FileUpdate f WHERE f.sourceId = :sourceId AND f.stationId = :stationId") })
+		@NamedQuery(name = "FileUpdate.getByIdClass", query = "SELECT f FROM FileUpdate f WHERE f.sourceId = :sourceId AND f.stationId = :stationId"),
+		@NamedQuery(name = "FileUpdate.deleteAll", query = "DELETE FROM FileUpdate") })
 public class FileUpdate implements Serializable {
 
 	@Id

@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import cz.muni.fi.sdipr.visualizationofozone.model.FileUpdate;
@@ -45,10 +47,14 @@ public class FileUpdateDao {
 	}
 
 	public FileUpdate findById(Long sourceId, Long stationId) {
-		TypedQuery<FileUpdate> q = em.createNamedQuery("FileUpdate.getByIdClass", FileUpdate.class);
-		q.setParameter("sourceId", sourceId);
-		q.setParameter("stationId", stationId);
-		return q.getSingleResult();
+		try {
+			TypedQuery<FileUpdate> q = em.createNamedQuery("FileUpdate.getByIdClass", FileUpdate.class);
+			q.setParameter("sourceId", sourceId);
+			q.setParameter("stationId", stationId);
+			return q.getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
 	}
 
 	public FileUpdate update(FileUpdate entity) {
@@ -65,5 +71,10 @@ public class FileUpdateDao {
 			findAllQuery.setMaxResults(maxResult);
 		}
 		return findAllQuery.getResultList();
+	}
+
+	public void deleteAll() {
+		Query q = em.createNamedQuery("FileUpdate.deleteAll");
+		q.executeUpdate();
 	}
 }
