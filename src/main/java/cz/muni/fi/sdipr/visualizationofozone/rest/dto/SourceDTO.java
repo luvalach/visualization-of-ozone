@@ -15,7 +15,7 @@ public class SourceDTO implements Serializable {
 	private Long id;
 	private String url;
 	private String description;
-	private List<NestedPhenomenonTypeDTO> phenomenonType = new ArrayList<NestedPhenomenonTypeDTO>();
+	private List<NestedPhenomenonTypeDTO> phenomenonTypes = new ArrayList<NestedPhenomenonTypeDTO>();
 
 	public SourceDTO() {
 	}
@@ -29,7 +29,7 @@ public class SourceDTO implements Serializable {
 					.iterator();
 			while (iterPhenomenonType.hasNext()) {
 				PhenomenonType element = iterPhenomenonType.next();
-				this.phenomenonType.add(new NestedPhenomenonTypeDTO(element));
+				this.phenomenonTypes.add(new NestedPhenomenonTypeDTO(element));
 			}
 		}
 	}
@@ -113,10 +113,10 @@ public class SourceDTO implements Serializable {
 	}
 
 	public List<NestedPhenomenonTypeDTO> getPhenomenonType() {
-		return this.phenomenonType;
+		return this.phenomenonTypes;
 	}
 
 	public void setPhenomenonType(final List<NestedPhenomenonTypeDTO> phenomenonType) {
-		this.phenomenonType = phenomenonType;
+		this.phenomenonTypes = phenomenonType;
 	}
 }

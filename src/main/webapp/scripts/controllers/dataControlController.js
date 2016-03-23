@@ -1,5 +1,5 @@
 angular.module('visualizationofozone').controller('DataControlController',
-		function($scope, flash, $resource) {
+		function($scope, flash, $resource, $route) {
 
 			var updateDbResource = $resource('rest/datacontrols/update');
 			$scope.updateDb = function() {
@@ -8,12 +8,14 @@ angular.module('visualizationofozone').controller('DataControlController',
 						'type' : 'info',
 						'text' : 'Database update started.'
 					});
+					$route.reload();
 				};
 				var errorCallback = function() {
 					flash.setMessage({
 						'type' : 'error',
 						'text' : 'Fail to start database update.'
 					});
+					$route.reload();
 				};
 
 				updateDbResource.query(successCallback, errorCallback);
@@ -26,12 +28,14 @@ angular.module('visualizationofozone').controller('DataControlController',
 						'type' : 'info',
 						'text' : 'Database successfully cleaned.'
 					});
+					$route.reload();
 				};
 				var errorCallback = function() {
 					flash.setMessage({
 						'type' : 'error',
 						'text' : 'Fail to clean database.'
 					});
+					$route.reload();
 				};
 
 				cleanDbResource.query(successCallback, errorCallback);

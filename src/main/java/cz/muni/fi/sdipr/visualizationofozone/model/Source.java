@@ -20,6 +20,7 @@ public class Source implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
+	@Column(nullable = false)
 	private String url;
 	private String description;
 	@OneToMany(mappedBy = "source")

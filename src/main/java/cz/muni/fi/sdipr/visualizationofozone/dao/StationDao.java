@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -31,6 +32,17 @@ public class StationDao {
 
 	public Station findById(Long id) {
 		return em.find(Station.class, id);
+	}
+
+	public Station findByFileName(String fileName) {
+		TypedQuery<Station> q = em.createNamedQuery("Station.findByFileName", Station.class);
+		q.setParameter("fileName", fileName);
+
+		try {
+			return q.getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
 	}
 
 	public Station update(Station entity) {
