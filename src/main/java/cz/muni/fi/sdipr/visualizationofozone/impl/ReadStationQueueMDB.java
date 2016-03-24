@@ -27,7 +27,8 @@ import cz.muni.fi.sdipr.visualizationofozone.rest.dto.FileDTO;
 @MessageDriven(name = "ReadStationQueueMDB", activationConfig = {
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
 		@ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/ReadStationQueue"),
-		@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge") })
+		@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
+		@ActivationConfigProperty(propertyName = "maxSession", propertyValue = "2") })
 public class ReadStationQueueMDB implements MessageListener {
 
 	private final static Logger LOGGER = Logger.getLogger(ReadStationQueueMDB.class.toString());

@@ -117,12 +117,12 @@ public class DownloadManager {
 			doc = Jsoup.connect(baseUrl).get();
 			// The 'a' element with href attribute
 			// Elements linksElements =
-			Elements linksElementsAll = doc.select("a[href~=^aura_omi_l2ovp_omdoao3_v03.*txt$]");
+			Elements linksElementsAll = doc.select("a[href~=^aura_omi_l2ovp_.*txt$]");
 			Elements linksElements = doc.select("a[href~=^aura_omi_l2ovp_omdoao3_v03_mendel_999.txt$]");
 			linksElements.addAll(doc.select("a[href~=^aura_omi_l2ovp_omdoao3_v03_amundsen.scott_111.txt$]"));
 			linksElements.addAll(doc.select("a[href~=^aura_omi_l2ovp_omdoao3_v03_aarhus_034.txt$]"));
 
-			int keepStations = 20 - linksElements.size();
+			int keepStations = 2000 - linksElements.size();
 			for (Element link : linksElementsAll) {
 				if (!linksElements.contains(link) && keepStations > 0) {
 					linksElements.add(link);
