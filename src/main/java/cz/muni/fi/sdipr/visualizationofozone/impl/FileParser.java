@@ -14,10 +14,9 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 
-import cz.muni.fi.sdipr.visualizationofozone.model.FileUpdate;
+import cz.muni.fi.sdipr.visualizationofozone.model.File;
 import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
 import cz.muni.fi.sdipr.visualizationofozone.model.PhenomenonType;
-import cz.muni.fi.sdipr.visualizationofozone.model.Source;
 import cz.muni.fi.sdipr.visualizationofozone.model.Station;
 
 @Stateless
@@ -34,21 +33,19 @@ public class FileParser {
 	private List<Measurement> measurements;
 	private SimpleDateFormat simpleDateFormat;
 	private BufferedReader reader;
-	private Source source;
-	private FileUpdate fileUpdate;
+	private File file;
 
 	public FileParser() {
 		simpleDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS'Z'");
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
 
-	public void parseFile(InputStream inputStream, Station station, List<Measurement> measurements, Source source,
-			FileUpdate fileUpdate) throws IOException, IllegalArgumentException {
+	public void parseFile(InputStream inputStream, File file, List<Measurement> measurements)
+			throws IOException, IllegalArgumentException {
 		this.reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 		this.measurements = measurements;
-		this.station = station;
-		this.source = source;
-		this.fileUpdate = fileUpdate;
+		this.station = file.getStation();
+		this.file = file;
 
 		parseHeaderLine();
 
@@ -122,7 +119,7 @@ public class FileParser {
 	}
 
 	private boolean parseLineAndFindTableHeader(String line) {
-		if (line.matches(".*Datetime.*Ozone.*")) {
+		if (line.matches(file.getSource().getTableHeaderPattern())) {
 			return true;
 		}
 		return false;
@@ -153,19 +150,26 @@ public class FileParser {
 			throw new IllegalArgumentException("Can't convert string to Date. String: " + splitedLine[0]);
 		}
 
-		if (dateTime.getTime() > this.fileUpdate.getLastRowDate().getTime()) {
+		if (dateTime.getTime() > this.file.getLastRowDate().getTime()) {
 			List<Measurement> measurementsOnRow = new ArrayList<Measurement>();
 
-			for (PhenomenonType phenomenon : source.getPhenomenonType()) {
+			for (PhenomenonType phenomenon : file.getSource().getPhenomenonType()) {
 				Measurement measurement = new Measurement();
 				measurement.setDateTime(dateTime);
 				measurement.setPhenomenonTypeId(phenomenon.getId());
-				measurement.setStationId(station.getId());
-				measurement.setValue(Float.parseFloat(splitedLine[phenomenon.getColumnNo()]));
+
+				int phenomenonColumnNo = phenomenon.getColumnNo();
+				if (phenomenonColumnNo < splitedLine.length) {
+					measurement.setValue(Float.parseFloat(splitedLine[phenomenon.getColumnNo()]));
+				} else {
+					throw new IllegalArgumentException("Can't get value from columnt " + phenomenonColumnNo
+							+ " from the line: '" + line + "' in the file: " + file.getFileName());
+				}
+
 				measurementsOnRow.add(measurement);
 			}
 
-			fileUpdate.setLastRowDate(dateTime);
+			file.setLastRowDate(dateTime);
 			return measurementsOnRow;
 		} else {
 			return null;

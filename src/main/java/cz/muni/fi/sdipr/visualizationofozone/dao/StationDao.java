@@ -34,9 +34,10 @@ public class StationDao {
 		return em.find(Station.class, id);
 	}
 
-	public Station findByFileName(String fileName) {
-		TypedQuery<Station> q = em.createNamedQuery("Station.findByFileName", Station.class);
-		q.setParameter("fileName", fileName);
+	public Station findByNameAndCountry(String name, String country) {
+		TypedQuery<Station> q = em.createNamedQuery("Station.findByNameAndCountry", Station.class);
+		q.setParameter("name", name);
+		q.setParameter("country", country);
 
 		try {
 			return q.getSingleResult();

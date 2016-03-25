@@ -1,94 +1,93 @@
 package cz.muni.fi.sdipr.visualizationofozone.rest.dto;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Calendar;
-import java.util.Date;
-
+import cz.muni.fi.sdipr.visualizationofozone.model.File;
+import javax.persistence.EntityManager;
 import cz.muni.fi.sdipr.visualizationofozone.model.Source;
-
+import cz.muni.fi.sdipr.visualizationofozone.model.Station;
+import java.util.Date;
+import javax.xml.bind.annotation.XmlRootElement;
+@XmlRootElement
 public class FileDTO implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	private Long id;
-	private Date dateOfRequestCreation;
 	private String fileName;
 	private Source source;
+	private Station station;
+	private Date lastUpdate;
+	private Date lastRowDate;
+	private long serialversionuid;
 
-	public FileDTO(Date dateOfRequestCreation, String fileName, Source source) {
-		this.dateOfRequestCreation = dateOfRequestCreation;
-		this.fileName = fileName;
-		this.source = source;
-		this.source.getPhenomenonType().size();
+	public FileDTO() {
 	}
 
-	public FileDTO(String fileName, Source source) {
-		this(Calendar.getInstance().getTime(), fileName, source);
+	public FileDTO(final File entity) {
+		if (entity != null) {
+			this.fileName = entity.getFileName();
+			this.source = entity.getSource();
+			this.station = entity.getStation();
+			this.lastUpdate = entity.getLastUpdate();
+			this.lastRowDate = entity.getLastRowDate();
+			this.serialversionuid = entity.getSerialversionuid();
+		}
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Date getDateOfRequestCreation() {
-		return dateOfRequestCreation;
-	}
-
-	public void setDateOfRequestCreation(Date dateOfRequestCreation) {
-		this.dateOfRequestCreation = dateOfRequestCreation;
+	public File fromDTO(File entity, EntityManager em) {
+		if (entity == null) {
+			entity = new File();
+		}
+		entity.setSource(this.source);
+		entity.setStation(this.station);
+		entity.setLastUpdate(this.lastUpdate);
+		entity.setLastRowDate(this.lastRowDate);
+		entity = em.merge(entity);
+		return entity;
 	}
 
 	public String getFileName() {
-		return fileName;
+		return this.fileName;
 	}
 
-	public void setFileName(String fileName) {
+	public void setFileName(final String fileName) {
 		this.fileName = fileName;
 	}
 
-	/**
-	 * Return absolute URL to file as String. URL is composed from source URL
-	 * and file name.
-	 * 
-	 * @return absolute URL to file
-	 */
-	public String getUrlAsString() {
-		return source.getUrl() + "/" + fileName;
-	}
-
-	/**
-	 * Return absolute URL to file as URL object. URL is composed from source
-	 * URL and file name.
-	 * 
-	 * @return absolute URL to file
-	 * @throws MalformedURLException
-	 *             when can't create URL object.
-	 */
-	public URL getUrl() throws MalformedURLException {
-		return new URL(getUrlAsString());
-	}
-
 	public Source getSource() {
-		return source;
+		return this.source;
 	}
 
-	public void setSource(Source source) {
+	public void setSource(final Source source) {
 		this.source = source;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Station getStation() {
+		return this.station;
 	}
 
-	@Override
-	public String toString() {
-		return "FileDTO [dateOfRequestCreation=" + dateOfRequestCreation + ", fileName=" + fileName + ", url="
-				+ this.getUrlAsString() + "]";
+	public void setStation(final Station station) {
+		this.station = station;
 	}
 
+	public Date getLastUpdate() {
+		return this.lastUpdate;
+	}
+
+	public void setLastUpdate(final Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public Date getLastRowDate() {
+		return this.lastRowDate;
+	}
+
+	public void setLastRowDate(final Date lastRowDate) {
+		this.lastRowDate = lastRowDate;
+	}
+
+	public long getSerialversionuid() {
+		return this.serialversionuid;
+	}
+
+	public void setSerialversionuid(final long serialversionuid) {
+		this.serialversionuid = serialversionuid;
+	}
 }

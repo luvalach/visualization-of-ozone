@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 @Entity
 @Table(name = "Sources")
 public class Source implements Serializable {
@@ -21,7 +23,10 @@ public class Source implements Serializable {
 	@Column(name = "id")
 	private Long id;
 	@Column(nullable = false)
+	@NotBlank
 	private String url;
+	@NotBlank
+	private String tableHeaderPattern;
 	private String description;
 	@OneToMany(mappedBy = "source")
 	private List<PhenomenonType> phenomenonType = new ArrayList<PhenomenonType>();
@@ -56,5 +61,13 @@ public class Source implements Serializable {
 
 	public void setPhenomenonType(List<PhenomenonType> phenomenonType) {
 		this.phenomenonType = phenomenonType;
+	}
+
+	public String getTableHeaderPattern() {
+		return tableHeaderPattern;
+	}
+
+	public void setTableHeaderPattern(String tableHeaderPattern) {
+		this.tableHeaderPattern = tableHeaderPattern;
 	}
 }

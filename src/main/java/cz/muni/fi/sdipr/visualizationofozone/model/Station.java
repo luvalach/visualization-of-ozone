@@ -14,12 +14,15 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
-@Table(name = "Stations")
+@Table(name = "Stations", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "country" }) })
 @NamedQueries({ @NamedQuery(name = "Station.deleteAll", query = "DELETE FROM Station"),
 		@NamedQuery(name = "Station.getAllIds", query = "SELECT DISTINCT s.id FROM Station s ORDER BY s.id"),
-		@NamedQuery(name = "Station.findByFileName", query = "SELECT s FROM Station s WHERE s.fileName = :fileName") })
+		@NamedQuery(name = "Station.findByNameAndCountry", query = "SELECT s FROM Station s WHERE s.name = :name AND s.country = :country") })
 public class Station implements Serializable {
 
 	@Id
@@ -27,7 +30,9 @@ public class Station implements Serializable {
 	@SequenceGenerator(name = "stations_id_seq", sequenceName = "stations_id_seq", allocationSize = 100)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
+	@NotBlank
 	private String name;
+	@NotBlank
 	private String country;
 	@Column(unique = true)
 	private String fileName;

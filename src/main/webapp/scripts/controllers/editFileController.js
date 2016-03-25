@@ -1,6 +1,6 @@
 
 
-angular.module('visualizationofozone').controller('EditFileUpdateController', function($scope, $routeParams, $location, flash, FileUpdateResource ) {
+angular.module('visualizationofozone').controller('EditFileController', function($scope, $routeParams, $location, flash, FileResource ) {
     var self = this;
     $scope.disabled = false;
     $scope.$location = $location;
@@ -8,22 +8,22 @@ angular.module('visualizationofozone').controller('EditFileUpdateController', fu
     $scope.get = function() {
         var successCallback = function(data){
             self.original = data;
-            $scope.fileUpdate = new FileUpdateResource(self.original);
+            $scope.file = new FileResource(self.original);
         };
         var errorCallback = function() {
-            flash.setMessage({'type': 'error', 'text': 'The fileUpdate could not be found.'});
-            $location.path("/FileUpdates");
+            flash.setMessage({'type': 'error', 'text': 'The file could not be found.'});
+            $location.path("/Files");
         };
-        FileUpdateResource.get({FileUpdateId:$routeParams.FileUpdateId}, successCallback, errorCallback);
+        FileResource.get({FileId:$routeParams.FileId}, successCallback, errorCallback);
     };
 
     $scope.isClean = function() {
-        return angular.equals(self.original, $scope.fileUpdate);
+        return angular.equals(self.original, $scope.file);
     };
 
     $scope.save = function() {
         var successCallback = function(){
-            flash.setMessage({'type':'success','text':'The fileUpdate was updated successfully.'}, true);
+            flash.setMessage({'type':'success','text':'The file was updated successfully.'}, true);
             $scope.get();
         };
         var errorCallback = function(response) {
@@ -33,17 +33,17 @@ angular.module('visualizationofozone').controller('EditFileUpdateController', fu
                 flash.setMessage({'type': 'error', 'text': 'Something broke. Retry, or cancel and start afresh.'}, true);
             }
         };
-        $scope.fileUpdate.$update(successCallback, errorCallback);
+        $scope.file.$update(successCallback, errorCallback);
     };
 
     $scope.cancel = function() {
-        $location.path("/FileUpdates");
+        $location.path("/Files");
     };
 
     $scope.remove = function() {
         var successCallback = function() {
-            flash.setMessage({'type': 'error', 'text': 'The fileUpdate was deleted.'});
-            $location.path("/FileUpdates");
+            flash.setMessage({'type': 'error', 'text': 'The file was deleted.'});
+            $location.path("/Files");
         };
         var errorCallback = function(response) {
             if(response && response.data && response.data.message) {
@@ -52,7 +52,7 @@ angular.module('visualizationofozone').controller('EditFileUpdateController', fu
                 flash.setMessage({'type': 'error', 'text': 'Something broke. Retry, or cancel and start afresh.'}, true);
             }
         }; 
-        $scope.fileUpdate.$remove(successCallback, errorCallback);
+        $scope.file.$remove(successCallback, errorCallback);
     };
     
     

@@ -9,23 +9,23 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import cz.muni.fi.sdipr.visualizationofozone.model.FileUpdate;
+import cz.muni.fi.sdipr.visualizationofozone.model.File;
 import cz.muni.fi.sdipr.visualizationofozone.model.FileUpdateKey;
 
 /**
- * DAO for FileUpdate
+ * DAO for File
  */
 @Stateless
-public class FileUpdateDao {
+public class FileDao {
 	@PersistenceContext(unitName = "visualization-of-ozone-persistence-unit")
 	private EntityManager em;
 
-	public void create(FileUpdate entity) {
+	public void create(File entity) {
 		em.persist(entity);
 	}
 
 	public boolean deleteById(FileUpdateKey id) {
-		FileUpdate entity = em.find(FileUpdate.class, id);
+		File entity = em.find(File.class, id);
 		if (entity != null) {
 			em.remove(entity);
 			return true;
@@ -34,7 +34,7 @@ public class FileUpdateDao {
 	}
 
 	public boolean deleteById(Long sourceId, Long stationId) {
-		FileUpdate entity = findById(sourceId, stationId);
+		File entity = findById(sourceId, stationId);
 		if (entity != null) {
 			em.remove(entity);
 			return true;
@@ -42,13 +42,13 @@ public class FileUpdateDao {
 		return false;
 	}
 
-	public FileUpdate findById(FileUpdateKey id) {
-		return em.find(FileUpdate.class, id);
+	public File findByFileName(String fileName) {
+		return em.find(File.class, fileName);
 	}
 
-	public FileUpdate findById(Long sourceId, Long stationId) {
+	public File findById(Long sourceId, Long stationId) {
 		try {
-			TypedQuery<FileUpdate> q = em.createNamedQuery("FileUpdate.getByIdClass", FileUpdate.class);
+			TypedQuery<File> q = em.createNamedQuery("File.getByIdClass", File.class);
 			q.setParameter("sourceId", sourceId);
 			q.setParameter("stationId", stationId);
 			return q.getSingleResult();
@@ -57,13 +57,13 @@ public class FileUpdateDao {
 		}
 	}
 
-	public FileUpdate update(FileUpdate entity) {
+	public File update(File entity) {
 		return em.merge(entity);
 	}
 
-	public List<FileUpdate> listAll(Integer startPosition, Integer maxResult) {
-		TypedQuery<FileUpdate> findAllQuery = em
-				.createQuery("SELECT DISTINCT f FROM FileUpdate f ORDER BY f.sourceId, f.stationId", FileUpdate.class);
+	public List<File> listAll(Integer startPosition, Integer maxResult) {
+		TypedQuery<File> findAllQuery = em.createQuery("SELECT DISTINCT f FROM File f ORDER BY f.sourceId, f.stationId",
+				File.class);
 		if (startPosition != null) {
 			findAllQuery.setFirstResult(startPosition);
 		}
@@ -74,7 +74,7 @@ public class FileUpdateDao {
 	}
 
 	public void deleteAll() {
-		Query q = em.createNamedQuery("FileUpdate.deleteAll");
+		Query q = em.createNamedQuery("File.deleteAll");
 		q.executeUpdate();
 	}
 }

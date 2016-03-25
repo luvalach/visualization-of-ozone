@@ -1,16 +1,29 @@
 <div class="form-horizontal">
-    <h3>Create a new FileUpdate</h3>
+    <h3>Create a new File</h3>
     <div class="form-group">
         <div class="col-md-offset-2 col-sm-2">
-            <a id="Create" name="Create" class="btn btn-primary" href="#/FileUpdates/new"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
+            <a id="Create" name="Create" class="btn btn-primary" href="#/Files/new"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
         </div>
     </div>
 </div>
 <hr/>
 <div>
-    <h3>Search for FileUpdates</h3>
-    <form id="FileUpdateSearch" class="form-horizontal">
+    <h3>Search for Files</h3>
+    <form id="FileSearch" class="form-horizontal">
         
+    <div class="form-group">
+        <label for="source" class="col-sm-2 control-label">Source</label>
+        <div class="col-sm-10">
+            <input id="source" name="source" class="form-control" type="text" ng-model="search.source" placeholder="Enter the File Source"></input>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="station" class="col-sm-2 control-label">Station</label>
+        <div class="col-sm-10">
+            <input id="station" name="station" class="form-control" type="text" ng-model="search.station" placeholder="Enter the File Station"></input>
+        </div>
+    </div>
 
 
 
@@ -27,18 +40,18 @@
         <table class="table table-responsive table-bordered table-striped clearfix">
             <thead>
                 <tr>
-                	<th>Source ID</th>
-                	<th>Station ID</th>
+                    <th>Source</th>
+                    <th>Station</th>
                     <th>Last Update</th>
                     <th>Last Row Date</th>
                 </tr>
             </thead>
             <tbody id="search-results-body">
                 <tr ng-repeat="result in filteredResults | startFrom:currentPage*pageSize | limitTo:pageSize">
-                	<td><a href="#/FileUpdates/edit/{{result.sourceId}}">{{result.sourceId}}</a></td>
-                	<td><a href="#/FileUpdates/edit/{{result.sourceId}}">{{result.stationId}}</a></td>
-                    <td><a href="#/FileUpdates/edit/{{result.sourceId}}">{{result.lastUpdate| date:'yyyy-MM-dd HH:mm:ss Z'}}</a></td>
-                    <td><a href="#/FileUpdates/edit/{{result.sourceId}}">{{result.lastRowDate| date:'yyyy-MM-dd HH:mm:ss Z'}}</a></td>
+                    <td><a href="#/Files/edit/{{result.fileName}}">{{result.source}}</a></td>
+                    <td><a href="#/Files/edit/{{result.fileName}}">{{result.station}}</a></td>
+                    <td><a href="#/Files/edit/{{result.fileName}}">{{result.lastUpdate| date:'yyyy-MM-dd HH:mm:ss Z'}}</a></td>
+                    <td><a href="#/Files/edit/{{result.fileName}}">{{result.lastRowDate| date:'yyyy-MM-dd HH:mm:ss Z'}}</a></td>
                 </tr>
             </tbody>
         </table>

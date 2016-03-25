@@ -34,8 +34,8 @@
                     </a>
                     <nav class="sidebar-nav" ng-controller="NavController" role="navigation">
                         <div id="sidebar-entries" class="list-group">
-                        	<a class="list-group-item" ng-class="{active: matchesRoute('DataControls')}" href="#/DataControls" data-toggle="offcanvas">Data controls</a>
-                        	<a class="list-group-item" ng-class="{active: matchesRoute('FileUpdates')}" href="#/FileUpdates" data-toggle="offcanvas">File Updates</a>
+                        	<a class="list-group-item" ng-class="{active: matchesRoute('DataControls')}" href="#/DataControls" data-toggle="offcanvas">Data Controls</a>
+                        	<a class="list-group-item" ng-class="{active: matchesRoute('Files')}" href="#/Files" data-toggle="offcanvas">Files</a>
                         	<a class="list-group-item" ng-class="{active: matchesRoute('Measurements')}" href="#/Measurements" data-toggle="offcanvas">Measurements</a>
                         	<a class="list-group-item" ng-class="{active: matchesRoute('PhenomenonTypes')}" href="#/PhenomenonTypes" data-toggle="offcanvas">Phenomenon Types</a>
                         	<a class="list-group-item" ng-class="{active: matchesRoute('Sources')}" href="#/Sources" data-toggle="offcanvas">Sources</a>
@@ -79,10 +79,10 @@
     <script src="scripts/services/flash.js"></script>
     <script src="scripts/services/locationParser.js"></script>
     <script src="scripts/controllers/flashController.js"></script>
-    <script src="scripts/services/FileUpdateFactory.js"></script>
-    <script src="scripts/controllers/newFileUpdateController.js"></script>
-    <script src="scripts/controllers/searchFileUpdateController.js"></script>
-    <script src="scripts/controllers/editFileUpdateController.js"></script>
+    <script src="scripts/services/FileFactory.js"></script>
+    <script src="scripts/controllers/newFileController.js"></script>
+    <script src="scripts/controllers/searchFileController.js"></script>
+    <script src="scripts/controllers/editFileController.js"></script>
     <script src="scripts/services/MeasurementFactory.js"></script>
     <script src="scripts/controllers/newMeasurementController.js"></script>
     <script src="scripts/controllers/searchMeasurementController.js"></script>

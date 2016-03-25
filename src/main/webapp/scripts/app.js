@@ -4,9 +4,9 @@ angular.module('visualizationofozone',['ngRoute','ngResource'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/',{templateUrl:'views/landing.html',controller:'LandingPageController'})
-      .when('/FileUpdates',{templateUrl:'views/FileUpdate/search.html',controller:'SearchFileUpdateController'})
-      .when('/FileUpdates/new',{templateUrl:'views/FileUpdate/detail.html',controller:'NewFileUpdateController'})
-      .when('/FileUpdates/edit/:FileUpdateId',{templateUrl:'views/FileUpdate/detail.html',controller:'EditFileUpdateController'})
+      .when('/Files',{templateUrl:'views/File/search.html',controller:'SearchFileController'})
+      .when('/Files/new',{templateUrl:'views/File/detail.html',controller:'NewFileController'})
+      .when('/Files/edit/:FileId',{templateUrl:'views/File/detail.html',controller:'EditFileController'})
       .when('/Measurements',{templateUrl:'views/Measurement/search.html',controller:'SearchMeasurementController'})
       .when('/Measurements/new',{templateUrl:'views/Measurement/detail.html',controller:'NewMeasurementController'})
       .when('/Measurements/edit/:StationId/:PhenomenonTypeId/:DateTime',{templateUrl:'views/Measurement/detail.html',controller:'EditMeasurementController'})

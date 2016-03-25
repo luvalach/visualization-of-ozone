@@ -39,13 +39,17 @@
         <table class="table table-responsive table-bordered table-striped clearfix">
             <thead>
                 <tr>
+                    <th>Id</th>
                     <th>Url</th>
+                    <th>Table Header Pattern</th>
                     <th>Description</th>
                 </tr>
             </thead>
             <tbody id="search-results-body">
                 <tr ng-repeat="result in filteredResults | startFrom:currentPage*pageSize | limitTo:pageSize">
+                    <td><a href="#/Sources/edit/{{result.id}}">{{result.id}}</a></td>
                     <td><a href="#/Sources/edit/{{result.id}}">{{result.url}}</a></td>
+                    <td><a href="#/Sources/edit/{{result.id}}">{{result.tableHeaderPattern}}</a></td>
                     <td><a href="#/Sources/edit/{{result.id}}">{{result.description}}</a></td>
                 </tr>
             </tbody>

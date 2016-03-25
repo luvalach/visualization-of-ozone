@@ -1,6 +1,6 @@
 
 
-angular.module('visualizationofozone').controller('SearchFileUpdateController', function($scope, $http, $filter, FileUpdateResource ) {
+angular.module('visualizationofozone').controller('SearchFileController', function($scope, $http, $filter, FileResource ) {
 
     $scope.search={};
     $scope.currentPage = 0;
@@ -19,7 +19,7 @@ angular.module('visualizationofozone').controller('SearchFileUpdateController', 
     };
 
     $scope.performSearch = function() {
-        $scope.searchResults = FileUpdateResource.queryAll(function(){
+        $scope.searchResults = FileResource.queryAll(function(){
             $scope.filteredResults = $filter('searchFilter')($scope.searchResults, $scope);
             $scope.currentPage = 0;
         });
