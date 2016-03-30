@@ -1,0 +1,31 @@
+{
+  "directory": "src/main/webapp/",
+  "name": "ozone-visualization",
+  "authors": [
+    "Lukas Valach <luvalach@seznam.cz>"
+  ],
+  "description": "Visualization of ozone",
+  "main": "app.html",
+  "moduleType": [],
+  "keywords": [
+    "ozone"
+  ],
+  "license": "MIT",
+  "homepage": "ozone-valach.rhcloud.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ZingChart-AngularJS": "zingchart-angularjs#^1.0.6",
+    "ui-select": "angular-ui-select#^0.14.9",
+    "angular-sanitize": "^1.5.0",
+    "angular-daterangepicker": "^0.2.2",
+    "cesium": "cesiumjs#^1.19.0",
+    "angular-bootstrap": "^1.2.5"
+  }
+}

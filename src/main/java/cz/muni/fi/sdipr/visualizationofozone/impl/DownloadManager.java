@@ -61,7 +61,7 @@ public class DownloadManager {
 			linksElements.addAll(doc.select("a[href~=^aura_omi_l2ovp_omdoao3_v03_amundsen.scott_111.txt$]"));
 			linksElements.addAll(doc.select("a[href~=^aura_omi_l2ovp_omuvb_v03_amundsen.scott.txt$]"));
 
-			int keepStations = 3 - linksElements.size();
+			int keepStations = 3000 - linksElements.size();
 			for (Element link : linksElementsAll) {
 				if (!linksElements.contains(link) && keepStations > 0) {
 					linksElements.add(link);

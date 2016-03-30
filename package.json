@@ -1,0 +1,11 @@
+{
+   "name":"frontend-tools",
+   "version":"0.0.1",
+   "dependencies": {
+      "bower":"latest",
+      "grunt": "latest",
+      "grunt-cli": "latest",
+      "grunt-contrib-jshint":"latest"
+   },
+   "devDependencies": {}
+}
