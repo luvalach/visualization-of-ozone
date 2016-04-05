@@ -19,14 +19,14 @@ import javax.ws.rs.core.Response.Status;
 
 import cz.muni.fi.sdipr.visualizationofozone.dao.MeasurementDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.StationDao;
-import cz.muni.fi.sdipr.visualizationofozone.impl.MeasurementConvertor;
+import cz.muni.fi.sdipr.visualizationofozone.downloading.impl.MeasurementConvertor;
 import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
 
 /**
  * 
  */
 @Stateless
-@Path("/graph")
+@Path("/dashboards")
 public class DashboardEndpoint {
 
 	@EJB

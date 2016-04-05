@@ -1,17 +1,19 @@
 package cz.muni.fi.sdipr.visualizationofozone.rest.dto;
 
 import java.io.Serializable;
-import cz.muni.fi.sdipr.visualizationofozone.model.File;
-import javax.persistence.EntityManager;
-import cz.muni.fi.sdipr.visualizationofozone.model.Source;
-import cz.muni.fi.sdipr.visualizationofozone.model.Station;
 import java.util.Date;
+
+import javax.persistence.EntityManager;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import cz.muni.fi.sdipr.visualizationofozone.model.File;
+import cz.muni.fi.sdipr.visualizationofozone.model.Station;
+
 @XmlRootElement
 public class FileDTO implements Serializable {
 
 	private String fileName;
-	private Source source;
+	private NestedSourceDTO source;
 	private Station station;
 	private Date lastUpdate;
 	private Date lastRowDate;
@@ -23,11 +25,11 @@ public class FileDTO implements Serializable {
 	public FileDTO(final File entity) {
 		if (entity != null) {
 			this.fileName = entity.getFileName();
-			this.source = entity.getSource();
 			this.station = entity.getStation();
 			this.lastUpdate = entity.getLastUpdate();
 			this.lastRowDate = entity.getLastRowDate();
 			this.serialversionuid = entity.getSerialversionuid();
+			this.source = new NestedSourceDTO(entity.getSource());
 		}
 	}
 
@@ -35,7 +37,6 @@ public class FileDTO implements Serializable {
 		if (entity == null) {
 			entity = new File();
 		}
-		entity.setSource(this.source);
 		entity.setStation(this.station);
 		entity.setLastUpdate(this.lastUpdate);
 		entity.setLastRowDate(this.lastRowDate);
@@ -49,14 +50,6 @@ public class FileDTO implements Serializable {
 
 	public void setFileName(final String fileName) {
 		this.fileName = fileName;
-	}
-
-	public Source getSource() {
-		return this.source;
-	}
-
-	public void setSource(final Source source) {
-		this.source = source;
 	}
 
 	public Station getStation() {
@@ -85,6 +78,14 @@ public class FileDTO implements Serializable {
 
 	public long getSerialversionuid() {
 		return this.serialversionuid;
+	}
+
+	public NestedSourceDTO getSource() {
+		return source;
+	}
+
+	public void setSource(NestedSourceDTO source) {
+		this.source = source;
 	}
 
 	public void setSerialversionuid(final long serialversionuid) {

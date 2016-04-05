@@ -1,7 +1,6 @@
 package cz.muni.fi.sdipr.visualizationofozone.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -29,7 +28,7 @@ public class Source implements Serializable {
 	private String tableHeaderPattern;
 	private String description;
 	@OneToMany(mappedBy = "source")
-	private List<PhenomenonType> phenomenonType = new ArrayList<PhenomenonType>();
+	private List<PhenomenonType> phenomenonType;
 
 	public Long getId() {
 		return id;

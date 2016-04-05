@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
 import cz.muni.fi.sdipr.visualizationofozone.dao.FileDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.MeasurementDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.StationDao;
-import cz.muni.fi.sdipr.visualizationofozone.impl.DownloadManager;
+import cz.muni.fi.sdipr.visualizationofozone.downloading.impl.DownloadManager;
 
 @Stateless
 @Path("/datacontrols")

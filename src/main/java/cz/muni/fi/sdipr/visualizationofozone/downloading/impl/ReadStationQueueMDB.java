@@ -1,4 +1,4 @@
-package cz.muni.fi.sdipr.visualizationofozone.impl;
+package cz.muni.fi.sdipr.visualizationofozone.downloading.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,10 +19,10 @@ import javax.jms.ObjectMessage;
 import cz.muni.fi.sdipr.visualizationofozone.dao.FileDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.MeasurementDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.StationDao;
+import cz.muni.fi.sdipr.visualizationofozone.downloading.dto.DownloadJobDTO;
 import cz.muni.fi.sdipr.visualizationofozone.model.File;
 import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
 import cz.muni.fi.sdipr.visualizationofozone.model.Station;
-import cz.muni.fi.sdipr.visualizationofozone.rest.dto.DownloadJobDTO;
 
 @MessageDriven(name = "ReadStationQueueMDB", activationConfig = {
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),

@@ -1,4 +1,4 @@
-package cz.muni.fi.sdipr.visualizationofozone.impl;
+package cz.muni.fi.sdipr.visualizationofozone.downloading.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;

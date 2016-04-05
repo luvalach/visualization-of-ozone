@@ -21,8 +21,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
-import cz.muni.fi.sdipr.visualizationofozone.rest.dto.FileDTO;
+
 import cz.muni.fi.sdipr.visualizationofozone.model.File;
+import cz.muni.fi.sdipr.visualizationofozone.rest.dto.FileDTO;
 
 /**
  * 
@@ -38,14 +39,13 @@ public class FileEndpoint {
 	public Response create(FileDTO dto) {
 		File entity = dto.fromDTO(null, em);
 		em.persist(entity);
-		return Response.created(
-				UriBuilder.fromResource(FileEndpoint.class)
-						.path(String.valueOf(entity.getFileName())).build())
+		return Response
+				.created(UriBuilder.fromResource(FileEndpoint.class).path(String.valueOf(entity.getFileName())).build())
 				.build();
 	}
 
 	@DELETE
-	@Path("/{id:[0-9][0-9]*}")
+	@Path("/{id:.+}")
 	public Response deleteById(@PathParam("id") String id) {
 		File entity = em.find(File.class, id);
 		if (entity == null) {
@@ -56,17 +56,15 @@ public class FileEndpoint {
 	}
 
 	@GET
-	@Path("/{id:[0-9][0-9]*}")
+	@Path("/{fileName:.+}")
 	@Produces("application/json")
-	public Response findById(@PathParam("id") String id) {
-		TypedQuery<File> findByIdQuery = em
-				.createQuery(
-						"SELECT DISTINCT f FROM File f WHERE f.fileName = :entityId ORDER BY f.fileName",
-						File.class);
-		findByIdQuery.setParameter("entityId", id);
+	public Response findById(@PathParam("fileName") String fileName) {
+		TypedQuery<File> findByFileNameQuery = em.createQuery(
+				"SELECT DISTINCT f FROM File f WHERE f.fileName = :entityId ORDER BY f.fileName", File.class);
+		findByFileNameQuery.setParameter("entityId", fileName);
 		File entity;
 		try {
-			entity = findByIdQuery.getSingleResult();
+			entity = findByFileNameQuery.getSingleResult();
 		} catch (NoResultException nre) {
 			entity = null;
 		}
@@ -79,12 +77,8 @@ public class FileEndpoint {
 
 	@GET
 	@Produces("application/json")
-	public List<FileDTO> listAll(@QueryParam("start") Integer startPosition,
-			@QueryParam("max") Integer maxResult) {
-		TypedQuery<File> findAllQuery = em
-				.createQuery(
-						"SELECT DISTINCT f FROM File f ORDER BY f.fileName",
-						File.class);
+	public List<FileDTO> listAll(@QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult) {
+		TypedQuery<File> findAllQuery = em.createQuery("SELECT DISTINCT f FROM File f ORDER BY f.fileName", File.class);
 		if (startPosition != null) {
 			findAllQuery.setFirstResult(startPosition);
 		}
@@ -101,7 +95,7 @@ public class FileEndpoint {
 	}
 
 	@PUT
-	@Path("/{id:[0-9][0-9]*}")
+	@Path("/{id:.+}")
 	@Consumes("application/json")
 	public Response update(@PathParam("id") String id, FileDTO dto) {
 		if (dto == null) {
@@ -121,8 +115,7 @@ public class FileEndpoint {
 		try {
 			entity = em.merge(entity);
 		} catch (OptimisticLockException e) {
-			return Response.status(Status.CONFLICT).entity(e.getEntity())
-					.build();
+			return Response.status(Status.CONFLICT).entity(e.getEntity()).build();
 		}
 		return Response.noContent().build();
 	}

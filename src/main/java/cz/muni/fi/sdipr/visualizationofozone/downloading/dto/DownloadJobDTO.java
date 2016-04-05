@@ -1,4 +1,4 @@
-package cz.muni.fi.sdipr.visualizationofozone.rest.dto;
+package cz.muni.fi.sdipr.visualizationofozone.downloading.dto;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
