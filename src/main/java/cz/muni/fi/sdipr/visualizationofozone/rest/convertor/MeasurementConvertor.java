@@ -1,4 +1,4 @@
-package cz.muni.fi.sdipr.visualizationofozone.downloading.impl;
+package cz.muni.fi.sdipr.visualizationofozone.rest.convertor;
 
 import java.util.ArrayList;
 import java.util.List;

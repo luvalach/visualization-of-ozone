@@ -127,15 +127,19 @@ angular.module('visualizationofozone').directive(
 						}
 						
 						this.refreshSeries = function(){
+							var dataPerStations = $scope.data.dataPerStations;
 							var lineChartData = [];
-							for (var stationId in $scope.data) {
+							for (var i = 0; i < dataPerStations.length; i++) {
+								var stationId = dataPerStations[i].stationId;
 								var station = this.getStationById(stationId);
-								if (stationId != null) {
+								if (station != null) {
 									var newSeries = {
 											text: station.name,
-											values: $scope.data[stationId]
+											values: dataPerStations[i].measurements
 									}
 									lineChartData.push(newSeries);
+								} else {
+									$log.error('Station with id ' + stationId + 'not found.')
 								}
 							}
 							

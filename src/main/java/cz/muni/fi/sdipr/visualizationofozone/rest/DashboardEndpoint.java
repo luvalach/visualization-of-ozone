@@ -2,11 +2,10 @@ package cz.muni.fi.sdipr.visualizationofozone.rest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
-import java.util.TreeMap;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -19,8 +18,10 @@ import javax.ws.rs.core.Response.Status;
 
 import cz.muni.fi.sdipr.visualizationofozone.dao.MeasurementDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.StationDao;
-import cz.muni.fi.sdipr.visualizationofozone.downloading.impl.MeasurementConvertor;
 import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
+import cz.muni.fi.sdipr.visualizationofozone.rest.convertor.MeasurementConvertor;
+import cz.muni.fi.sdipr.visualizationofozone.rest.dto.DataPerPhenomenonsDTO;
+import cz.muni.fi.sdipr.visualizationofozone.rest.dto.DataPerStationDTO;
 
 /**
  * 
@@ -59,20 +60,23 @@ public class DashboardEndpoint {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 
-		Map<Long, Map<Long, List<Number[]>>> phenomenonsAndStations = new TreeMap<Long, Map<Long, List<Number[]>>>();
+		List<DataPerPhenomenonsDTO> dataPerPhenomenonsDTOs = new ArrayList<>();
 
 		for (Long phenomenonTypeId : phenomenonTypeIds) {
-			Map<Long, List<Number[]>> stationsAndMeasurements = new TreeMap<Long, List<Number[]>>();
+			List<DataPerStationDTO> dataPerStationDTOs = new ArrayList<>();
 
 			for (Long stationId : stationIds) {
+				DataPerStationDTO dataPerStationDTO = new DataPerStationDTO(stationId);
 				List<Measurement> measurements = measurementDao.findByStationPhenomenonDates(stationId,
 						phenomenonTypeId, fromDate, toDate);
-				stationsAndMeasurements.put(stationId, MeasurementConvertor.toChartReadableArray(measurements));
+				dataPerStationDTO.setMeasurements(MeasurementConvertor.toChartReadableArray(measurements));
+				dataPerStationDTOs.add(dataPerStationDTO);
 			}
 
-			phenomenonsAndStations.put(phenomenonTypeId, stationsAndMeasurements);
+			DataPerPhenomenonsDTO dataPerPhenomenonsDTO = new DataPerPhenomenonsDTO(phenomenonTypeId, dataPerStationDTOs);
+			dataPerPhenomenonsDTOs.add(dataPerPhenomenonsDTO);
 		}
 
-		return Response.ok(phenomenonsAndStations).build();
+		return Response.ok(dataPerPhenomenonsDTOs).build();
 	}
 }
