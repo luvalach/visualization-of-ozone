@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('visualizationofozone',['ngRoute','ngResource'])
+angular.module('visualizationofozone',['ngRoute','ngResource', 'ui.bootstrap', 'zingchart-angularjs', 'ui.select', 'ngSanitize', 'daterangepicker', 'ui.sortable'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
       .when('/',{templateUrl:'views/landing.html',controller:'LandingPageController'})
@@ -20,6 +20,7 @@ angular.module('visualizationofozone',['ngRoute','ngResource'])
       .when('/Stations/new',{templateUrl:'views/Station/detail.html',controller:'NewStationController'})
       .when('/Stations/edit/:StationId',{templateUrl:'views/Station/detail.html',controller:'EditStationController'})
       .when('/DataControls',{templateUrl:'views/DataControl/dataControl.html',controller:'DataControlController'})
+      .when('/Dashboard',{templateUrl:'views/Dashboard/dashboard.html',controller:'DashboardController'})
       .otherwise({
         redirectTo: '/'
       });
