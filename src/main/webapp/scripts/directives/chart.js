@@ -13,6 +13,9 @@ angular.module('visualizationofozone').directive(
 				},
 				template: '<zingchart id="chart-{{phenomenon.id}}" zc-json="chart" zc-render="myRender" zc-width="100%"></zingchart>', //<pre ng-bind="chart | json"></pre>
 				controller : function($scope) {
+					//Limit of stations for line chart. If limit is exceeded the bar chart is shown instead of line chart.
+					const LINE_CHART_LIMIT = 10;
+					
 					this.lineChart = {
 							type : 'line',
 							title : {
@@ -26,7 +29,7 @@ angular.module('visualizationofozone').directive(
 								},
 								"value-box" : {
 									"visible" : "true",
-									"text" : "%v DU",
+									"text" : "%v",
 									"type" : "min,max"
 								}
 							},
@@ -40,7 +43,7 @@ angular.module('visualizationofozone').directive(
 							},
 							"scale-y" : {
 								"label" : {
-									"text" : "Total Ozone [DU]"
+									"text" : ""
 								}
 							},
 							"scale-x" : {
@@ -62,18 +65,15 @@ angular.module('visualizationofozone').directive(
 						
 						this.barChart = {
 								type : 'bar',
+								title : {
+							        "text":""
+							    },
 								plot : {
 									aspect : 'spline',
 									"tooltip" : {
-										"text" : "Station: %t <br/>Total Ozone: %vt",
+										"text" : "",
 										"placement" : "node:top"
-									},
-									"animation" : {
-										"effect" : "4",
-										"method" : "1",
-										"sequence" : "1",
-										"speed" : 500
-									},
+									}
 								},
 								"legend" : {
 									"max-items" : 8,
@@ -85,15 +85,14 @@ angular.module('visualizationofozone').directive(
 								},
 								"scale-y" : {
 									"label" : {
-										"text" : "Total Ozone [DU]"
-									},
-									"min-value" : 0,
-									"max-value" : 500
+										"text" : ""
+									}
 								},
 								"scale-x" : {
 									"label" : {
 										"text" : "Stations",
-									}
+									},
+									"show-labels" : []
 								},
 								"scroll-x" : {},
 								height : "100%",
@@ -101,8 +100,6 @@ angular.module('visualizationofozone').directive(
 								series : []
 							};
 						
-						$scope.chart = this.lineChart;
-
 						$scope.myRender = {
 							output : "auto",
 							events : {
@@ -122,34 +119,73 @@ angular.module('visualizationofozone').directive(
 						}
 						
 						this.refresh = function(){
-							this.refreshSeries();
-							this.refreshLabels();
+							if ($scope.data.dataPerStations.length <= LINE_CHART_LIMIT){
+								this.refreshLineSeries();
+								this.refreshLineLabels();
+								$scope.chart = this.lineChart;
+							} else {
+								this.refreshBarSeries();
+								this.refreshBarLabels();
+								$scope.chart = this.barChart;
+							}
 						}
 						
-						this.refreshSeries = function(){
+						this.refreshLineSeries = function(){
 							var dataPerStations = $scope.data.dataPerStations;
-							var lineChartData = [];
+							var chartData = [];
 							for (var i = 0; i < dataPerStations.length; i++) {
 								var stationId = dataPerStations[i].stationId;
 								var station = this.getStationById(stationId);
+								
 								if (station != null) {
 									var newSeries = {
 											text: station.name,
 											values: dataPerStations[i].measurements
 									}
-									lineChartData.push(newSeries);
+									chartData.push(newSeries);
 								} else {
-									$log.error('Station with id ' + stationId + 'not found.')
+									$log.error('Station with id ' + stationId + 'not found.');
 								}
 							}
 							
-							$scope.chart['series'] = lineChartData;
+							this.lineChart['series'] = chartData;
 						}
 						
-						this.refreshLabels = function(){
-							$scope.chart.title.text = $scope.phenomenon.description;
-							$scope.chart.plot['value-box']['text'] = '%v '+ $scope.phenomenon.unitShortcut;
-							$scope.chart['scale-y']['label']['text'] = $scope.phenomenon.name + ' [' + $scope.phenomenon.unitShortcut + ']';
+						this.refreshLineLabels = function(){
+							this.lineChart.title.text = $scope.phenomenon.description;
+							this.lineChart.plot['value-box']['text'] = '%v '+ $scope.phenomenon.unitShortcut;
+							this.lineChart['scale-y']['label']['text'] = $scope.phenomenon.name + ' [' + $scope.phenomenon.unitShortcut + ']';
+						}
+						
+						this.refreshBarSeries = function(){
+							var dataPerStations = $scope.data.dataPerStations;
+							var chartData = [];
+							for (var i = 0; i < dataPerStations.length; i++) {
+								var stationId = dataPerStations[i].stationId;
+								var station = this.getStationById(stationId);
+								var measurements = dataPerStations[i].measurements;
+								var measurementsLength = measurements.length;
+								
+								if (station == null){
+									$log.error('Station with id ' + stationId + 'not found.');
+								}
+								
+								if (measurementsLength > 0) {
+									var lastMeasurementIndex = measurementsLength - 1;
+									var newSeries = {
+											text: station.name,
+											values: [measurements[lastMeasurementIndex][1]]
+									}
+									chartData.push(newSeries);
+								}
+							}
+							
+							this.barChart['series'] = chartData;
+						}
+						
+						this.refreshBarLabels = function(){
+							this.barChart.title.text = $scope.phenomenon.description;
+							this.barChart['scale-y']['label']['text'] = $scope.phenomenon.name + ' [' + $scope.phenomenon.unitShortcut + ']';
 						}
 						
 						this.refresh();

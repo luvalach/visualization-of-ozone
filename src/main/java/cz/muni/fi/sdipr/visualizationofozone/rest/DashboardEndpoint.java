@@ -60,6 +60,11 @@ public class DashboardEndpoint {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 
+		if (stationIds.size() == 0 || (stationIds.size() == 1 && stationIds.get(0) == 0)) {
+			List<Long> allStationIds = stationDao.getAllIds();
+			stationIds = allStationIds;
+		}
+
 		List<DataPerPhenomenonsDTO> dataPerPhenomenonsDTOs = new ArrayList<>();
 
 		for (Long phenomenonTypeId : phenomenonTypeIds) {
@@ -73,7 +78,8 @@ public class DashboardEndpoint {
 				dataPerStationDTOs.add(dataPerStationDTO);
 			}
 
-			DataPerPhenomenonsDTO dataPerPhenomenonsDTO = new DataPerPhenomenonsDTO(phenomenonTypeId, dataPerStationDTOs);
+			DataPerPhenomenonsDTO dataPerPhenomenonsDTO = new DataPerPhenomenonsDTO(phenomenonTypeId,
+					dataPerStationDTOs);
 			dataPerPhenomenonsDTOs.add(dataPerPhenomenonsDTO);
 		}
 

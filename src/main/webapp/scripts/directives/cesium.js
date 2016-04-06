@@ -2,27 +2,34 @@
 
 angular.module('visualizationofozone').directive(
 		'cesiumDirective',
-		function($interval) {
+		function($interval, $filter, geocoordinateFilter) {
 			return {
 				restrict : "EA",
 				controllerAs : "cesiumCtrl",
 				scope : {
+					stationData : "=",
 					stationList : "=",
 					searchStations : "=",
 					searchDate : "=",
 					onDoubleClick : "&",
 					onClickWithCtrl : "&",
-					stationData : "="
+					getPhenomenonById : "&"					
 				},
 				controller : function($scope) {
+					/*
+					 * Refresh visualization of selected stations and fly to last selected station.
+					 * This function sets points outline color and width.
+					 */
 					this.refreshSelection = function(newValue, oldValue) {						
 						Array.prototype.diff = function(a) {
 						    return this.filter(function(i) {return a.indexOf(i) < 0;});
 						};
 						
+						//Stations added and removed from selection
 						var added = newValue.diff(oldValue);
 						var removed = oldValue.diff(newValue);
 						
+						//Set default outline on unselected stations
 						for (var i = 0; i < removed.length; i++) {
 							var entity = this.cesium.entities.getById(removed[i])
 							if (typeof entity === 'undefined' ){
@@ -32,6 +39,7 @@ angular.module('visualizationofozone').directive(
 							entity.point.outlineWidth = this.defaultOutlineWidth;
 						}
 						
+						//Set selected-style outline to selected stations and fly camera to last selected station.
 						for (var i = 0; i < added.length; i++) {
 							var entity = this.cesium.entities.getById(added[i])
 							if (typeof entity === 'undefined' ){
@@ -55,10 +63,17 @@ angular.module('visualizationofozone').directive(
 						}
 					}
 					
+					/**
+					 * Set points inner color and size. 
+					 * Points of stations which data are known will be bigger and 
+					 * inner color is calculated according to measurement value.
+					 * 
+					 * Globe should display last value in first chart for each station.
+					 */
 					this.refreshStationData = function(newValue, oldValue){
-						var stationData = $scope.stationData;
 						var entities =  this.cesium.entities.values;
-
+						
+						//Clean all stations - set default to all points
 						for (var i = 0; i < entities.length; i++) {
 							var entity = entities[i];
 							if (typeof entity.point === 'undefined' ){
@@ -66,25 +81,42 @@ angular.module('visualizationofozone').directive(
 							}
 							entity.point.color = this.defaultColor;
 							entity.point.pixelSize = this.defaultPixelSize;
+							entity.description = this.assemblyStationDescription(entity);
 						}
 						
-						for (var i = 0; i < stationData.length; i++) {
-							var entity = this.cesium.entities.getById(stationData[i].id)
+						//Set variables for later usage or return if data aren't available
+						if ($scope.stationData.length > 0){
+							var phenomenonData = $scope.stationData[0];
+							var phenomenonType = $scope.getPhenomenonById({id: phenomenonData.phenomenonTypeId});
+							var dataPerStations = phenomenonData.dataPerStations;
+						} else {
+							//No data found
+							return;
+						}
+						
+						//For each station which data are available set color and size.
+						for (var i = 0; i < dataPerStations.length; i++) {
+							var entity = this.cesium.entities.getById(dataPerStations[i].stationId)
 							if (typeof entity === 'undefined' ){
 								continue;
 							}
 							
-							var measures = stationData[i].measures;
+							var measures = dataPerStations[i].measurements;
 							
 							if (measures.length > 0){
-								var lastMeasure = stationData[i].measures[measures.length - 1];
-								var ozone = lastMeasure[1];
-								entity.point.color = this.valueToColor(ozone);
+								var lastMeasure = measures[measures.length - 1];
+								var measurementDate = lastMeasure[0];
+								var measurementValue = lastMeasure[1];
+								entity.point.color = this.valueToColor(measurementValue);
 								entity.point.pixelSize = this.downloadedPixelSize;
+								entity.description = this.assemblyStationDescription(entity, phenomenonType, measurementDate, measurementValue);
 							}
 						}
 					}
 					
+					/**
+					 * Convert measurement value to Cesium.Color
+					 */
 					this.valueToColor = function(value){
 				        var frequency = .015;
 				        var i = value + 100;
@@ -97,6 +129,45 @@ angular.module('visualizationofozone').directive(
 						return new Cesium.Color.fromBytes(red, green, blue, 255);
 					}
 					
+					/**
+					 * Return description as string/html. 
+					 * Entity is mandatory parameter, others can be undefined.
+					 */
+					this.assemblyStationDescription = function(entity, phenomenonType, measurementDate, measurementValue) {
+						var description = '';
+						
+						if (typeof entity.country !== 'undefined' ){
+							description += 'Country: ' + entity.country + '</br>';
+						}
+						
+						if (typeof measurementDate === 'undefined' ){
+							var measurementDate = 'unknown'
+						}
+						
+						description += 'Longitude: ' + geocoordinateFilter.longitude(entity.longitude) + '</br>';
+						description += 'Latitude: ' + geocoordinateFilter.latitude(entity.latitude) + '</br>';
+						description += 'Last update: ' + $filter('date')(entity.lastUpdate, 'yyyy-MM-dd HH:mm:ss Z') + '</br>';
+						description += '</br>';
+						
+						//If phenomenonType is undefined then add warding message instead of measurement data.
+						if (typeof phenomenonType === 'undefined'){
+							description += '<b>Data for this station are unavailable, try to modify filter setting.</b>';
+						} else {
+							description += '<b>Displayed measurement</b></br>';
+							description += 'Phenomenon: ' + phenomenonType.name + '</br>';
+							description += 'Date: ' + $filter('date')(measurementDate, 'yyyy-MM-dd HH:mm:ss Z') + '</br>';
+							description += 'Value: ' + measurementValue + ' [' + phenomenonType.unitShortcut + ']</br>';
+						}
+						
+						//Hack inserting picture of Mendel station
+						if (entity.name.match(/mendel/gi)){
+							description += '</br>';
+							description += '<img class="hidden-xs img-responsive" src="img/mendel_station1.jpeg" width="100%" alt="Ozone visualization"></img></br>';
+						}
+						
+						return description;
+					}
+					
 //					Sandcastle.addToolbarMenu([{
 //					    text : 'Add billboard',
 //					    onselect : function() {
@@ -107,7 +178,7 @@ angular.module('visualizationofozone').directive(
 				link : function(scope, element, attr, ctrl) {
 					ctrl.defaultPixelSize = 5;
 					ctrl.defaultColor = Cesium.Color.SILVER;
-					ctrl.defaultOutlineWidth = 2;
+					ctrl.defaultOutlineWidth = 0;
 					ctrl.defaultOutlineColor = Cesium.Color.WHITE;
 					
 					ctrl.downloadedPixelSize = 10;
@@ -165,8 +236,10 @@ angular.module('visualizationofozone').directive(
 						for (var i = 0; i < arrayLength; i++) {
 							var id = scope.stationList[i].id;
 							var name = scope.stationList[i].name;
+							var country = scope.stationList[i].country;
 							var longitude = scope.stationList[i].longitude;
 							var latitude = scope.stationList[i].latitude;
+							var lastUpdate = scope.stationList[i].lastUpdate;
 							
 							if (typeof longitude === 'undefined' ){
 								continue;
@@ -179,9 +252,8 @@ angular.module('visualizationofozone').directive(
 												.fromDegrees(longitude,
 														latitude),
 										name : name,
-										description : '<p>Longitude: '
-												+ longitude + '<br/>Latitude: '
-												+ latitude + '</p>',
+										country : country,
+										lastUpdate : lastUpdate,
 										point : {
 											pixelSize : ctrl.defaultPixelSize,
 											color : ctrl.defaultColor,

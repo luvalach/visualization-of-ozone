@@ -4,8 +4,10 @@
          class="pull-right glyphicon"
          ng-class="{'glyphicon-chevron-down': panels.open3, 'glyphicon-chevron-right': !panels.open3}"></i></uib-accordion-heading>
       <div cesium-directive id="cesium1" class="cesiumContainer" style="height: 400px;"
-         station-list="stationList" search-stations="search.stations" search-date="search.date.endDate" station-data="searchResults" on-double-click="onDoubleClick(entity)" on-click-with-ctrl="onClickWithCtrl(entity)"></div>
+         station-list="stationList" search-stations="search.stations" search-date="search.date.endDate" station-data="searchResults" on-double-click="onDoubleClick(entity)" on-click-with-ctrl="onClickWithCtrl(entity)" get-phenomenon-by-id="getPhenomenonById(id)" ></div>
    </uib-accordion-group>
+   
+   
    <uib-accordion-group
       class="panel panel-info" is-open="panels.open1">
       <uib-accordion-heading> Filter <i
@@ -55,14 +57,16 @@
          </form>
       </div>
    </uib-accordion-group>
+   
+   
    <uib-accordion-group class="panel panel-info" is-open="panels.open2">
       <uib-accordion-heading>
          Chart 
          <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': panels.open2, 'glyphicon-chevron-right': !panels.open2}"></i> 
       </uib-accordion-heading>
       <ul ui-sortable ng-model="searchResults">
-      	<li chart-directive ng-repeat="data in searchResults" data="data" station-list="stationList" phenomenon="getPhenomenonById(data.phenomenonTypeId)">
-      	</li>
+      	<div chart-directive ng-repeat="data in searchResults" data="data" station-list="stationList" phenomenon="getPhenomenonById(data.phenomenonTypeId)">
+      	</div>
       </ul>
    </uib-accordion-group>
 </uib-accordion>
