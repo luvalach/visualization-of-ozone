@@ -4,7 +4,7 @@ angular
 		.module('visualizationofozone')
 		.directive(
 				'chartDirective',
-				function($interval, $log) {
+				function($interval, $log, statisticsUtil) {
 					return {
 						restrict : "EA",
 						controllerAs : "chartCtrl",
@@ -13,14 +13,13 @@ angular
 							stationList : "=",
 							phenomenon : "="
 						},
-						template : '<zingchart id="chart-{{phenomenon.id}}" zc-json="chart" zc-render="myRender" zc-width="100%"></zingchart>', // <pre
-						// ng-bind="chart
-						// |
-						// json"></pre>
+						template : '<span class="pull-right glyphicon glyphicon-move sortable-handle"></span> <zingchart id="chart-{{phenomenon.id}}" zc-json="chart" zc-render="myRender" zc-width="100%"></zingchart>',
 						controller : function($scope) {
-							// Limit of stations for line chart. If limit is
-							// exceeded the bar chart is shown instead of line
-							// chart.
+							/**
+							 * Limit of stations for line chart. If limit is
+							 * exceeded the bar chart is shown instead of line
+							 * chart.
+							 */
 							const
 							LINE_CHART_LIMIT = 10;
 
@@ -42,9 +41,13 @@ angular
 									}
 								},
 								"legend" : {
+									"header":{
+								        "text":"Stations"
+								      },
 									"max-items" : 4,
 									"overflow" : "page",
 									"highlight-plot" : true,
+									"draggable" : true,
 									"tooltip" : {
 										"text" : "Click to show/hide series."
 									}
@@ -85,9 +88,13 @@ angular
 									}
 								},
 								"legend" : {
+									"header":{
+								        "text":"Stations"
+								      },
 									"max-items" : 8,
 									"overflow" : "page",
 									"highlight-plot" : true,
+									"draggable" : true,
 									"tooltip" : {
 										"text" : "Click to show/hide series."
 									}
@@ -217,7 +224,7 @@ angular
 							 * of line chart.
 							 */
 							this.addStatisticsMarkers = function() {
-								var series =  this.lineChart['series'];
+								var series = this.lineChart['series'];
 								var values = series[0]['values'];
 								if (series.length == 1) {
 									var markers = [];
@@ -230,23 +237,14 @@ angular
 							}
 
 							this.getMeanMarker = function(values) {
-
-								var sum = 0;
-
-								for (var i = 0; i < values.length; i++) {
-									sum += values[i][1];
-								}
-
-								var mean = sum / values.length;
-
 								var meanMarker = {
 									type : "line",
-									range : [ mean ],
+									range : [ statisticsUtil.getMean(values) ],
 									label : {
 										text : "Mean",
-										"color":"red"
+										"color" : "red"
 									},
-									"line-color": "red",
+									"line-color" : "red",
 									alpha : 0.5,
 									lineWidth : 2,
 									lineStyle : "dashed"
@@ -255,33 +253,15 @@ angular
 							}
 
 							this.getMedianMarker = function(values) {
-								var median = 0;
-								var numbers = [];
-
-								for (var i = 0; i < values.length; i++) {
-									numbers.push(values[i][1]);
-								}
-
-								var numsLen = numbers.length;
-								numbers.sort();
-
-								if (numsLen % 2 === 0) { // is even
-									// average of two middle numbers
-									median = (numbers[numsLen / 2 - 1] + numbers[numsLen / 2]) / 2;
-								} else { // is odd
-									// middle number only
-									median = numbers[(numsLen - 1) / 2];
-								}
-
 								var medianMarker = {
 									type : "line",
-									range : [ median ],
+									range : [ statisticsUtil.getMedian(values) ],
 									label : {
 										text : "Median",
-										"color":"blue",
-										"offset-x":"30px",
+										"color" : "blue",
+										"offset-x" : "30px",
 									},
-									"line-color": "blue",
+									"line-color" : "blue",
 									alpha : 0.5,
 									lineWidth : 2,
 									lineStyle : "dotted"

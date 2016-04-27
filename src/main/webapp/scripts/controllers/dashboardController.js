@@ -2,76 +2,96 @@ angular
 		.module('visualizationofozone')
 		.controller(
 				'DashboardController',
-				function($scope, $http, $filter,
-						StationResource, DashboardResource, PhenomenonTypeResource, flash ) {
+				function($scope, $http, $filter, StationResource,
+						DashboardResource, PhenomenonTypeResource, flash) {
 
 					$scope.search = {
-							stations : [],
-							date : {
-								startDate: moment().subtract(6, 'days'), 
-								endDate: moment()
-							}
+						stations : [],
+						date : {
+							startDate : moment().subtract(6, 'days'),
+							endDate : moment()
+						}
 					};
-					$scope.searchResults = []; //data fetched from server (stations and measures)
+					$scope.searchResults = []; // data fetched from server
+												// (stations and measures)
 					$scope.panels = {
-							open1 : true, //filter
-							open2 : true, //chart
-							open3 : true //globe
+						open1 : true, // filter
+						open2 : true, // chart
+						open3 : true
+					// globe
 					};
 					$scope.allStationsItem = {
-							id : 0,
-							name : 'All stations',
-							country : ''
+						id : 0,
+						name : 'All stations',
+						country : ''
 					};
-					$scope.stationList = [$scope.allStationsItem]; //all stations without measures
-					$scope.search.stations = []; //Default filter setting
-					
+					$scope.stationList = [ $scope.allStationsItem ]; // all
+																		// stations
+																		// without
+																		// measures
+					$scope.search.stations = []; // Default filter setting
+
 					$scope.defaultPhenomenonSelection = {
-							0 : true
+						0 : true
 					};
-					$scope.phenomenonTypeList = [{id: 1, name: "Ozone"}, {id: 2, name: "UV Index"}];
+					$scope.phenomenonTypeList = [ {
+						id : 1,
+						name : "Ozone"
+					}, {
+						id : 2,
+						name : "UV Index"
+					} ];
 					$scope.search.phenomenonTypes = {};
-					
+
 					$scope.datePicker = {
-							opts : {
-								ranges: {
-							           'Today': [moment(), moment()],
-							           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-							           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-							           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-							           'This Month': [moment().startOf('month'), moment().endOf('month')],
-							           'Last Month': [moment().subtract(1, 'month'), moment()],
-							           'This Year': [moment().startOf('year'), moment().endOf('year')],
-							           'Last Year': [moment().subtract(1, 'year'), moment()]
-							        },
-							    locale: {
-							            "format": "DD.MM.YYYY",
-							            "separator": " - ",
-							            "applyLabel": "Apply",
-							            "cancelLabel": "Cancel",
-							            "fromLabel": "From",
-							            "toLabel": "To",
-							            "customRangeLabel": "Custom",
-							            "firstDay": 1
-							        },
-							}
+						opts : {
+							ranges : {
+								'Today' : [ moment(), moment() ],
+								'Yesterday' : [ moment().subtract(1, 'days'),
+										moment().subtract(1, 'days') ],
+								'Last 7 Days' : [ moment().subtract(6, 'days'),
+										moment() ],
+								'Last 30 Days' : [
+										moment().subtract(29, 'days'), moment() ],
+								'This Month' : [ moment().startOf('month'),
+										moment().endOf('month') ],
+								'Last Month' : [ moment().subtract(1, 'month'),
+										moment() ],
+								'This Year' : [ moment().startOf('year'),
+										moment().endOf('year') ],
+								'Last Year' : [ moment().subtract(1, 'year'),
+										moment() ]
+							},
+							locale : {
+								"format" : "DD.MM.YYYY",
+								"separator" : " - ",
+								"applyLabel" : "Apply",
+								"cancelLabel" : "Cancel",
+								"fromLabel" : "From",
+								"toLabel" : "To",
+								"customRangeLabel" : "Custom",
+								"firstDay" : 1
+							},
+						}
+					};
+
+					$scope.sortableOptions = {
+						handle : '> .sortable-handle'
 					};
 
 					$scope.refreshListOfStations = function() {
-						StationResource
-								.queryAll(function(items) {
-									$scope.stationList = items;
-									$scope.stationList.push($scope.allStationsItem);
-									$scope.initialSearch();
-								});
+						StationResource.queryAll(function(items) {
+							$scope.stationList = items;
+							$scope.stationList.push($scope.allStationsItem);
+							$scope.initialSearch();
+						});
 					};
-					
+
 					$scope.refreshListOfPhenomenonTypes = function() {
-						PhenomenonTypeResource
-								.queryAll(function(items) {
-									$scope.phenomenonTypeList = items;
-									$scope.initialSearch();
-								});
+						PhenomenonTypeResource.queryAll(function(items) {
+							$scope.phenomenonTypeList = items;
+							$scope.initialSearch();
+						});
 					};
 
 					$scope.performSearch = function() {
@@ -85,77 +105,80 @@ angular
 							$scope.refreshListOfStations();
 						};
 
-						
-						$scope.searchResults = DashboardResource.query({
-							stationIds : $scope.search.stations,
-							phenomenonTypeIds : $scope.selectionToArrayOfIds($scope.search.phenomenonTypes),
-							startDate: $scope.search.date.startDate,
-							endDate: $scope.search.date.endDate
-						}, successCallback, errorCallback);
+						$scope.searchResults = DashboardResource
+								.query(
+										{
+											stationIds : $scope.search.stations,
+											phenomenonTypeIds : $scope
+													.selectionToArrayOfIds($scope.search.phenomenonTypes),
+											startDate : $scope.search.date.startDate,
+											endDate : $scope.search.date.endDate
+										}, successCallback, errorCallback);
 					};
-					
-//					$scope.numberOfPages = function() {
-//						// Function is expected by searchFilter
-//					};
-					
+
+					// $scope.numberOfPages = function() {
+					// // Function is expected by searchFilter
+					// };
+
 					$scope.selectionToArrayOfIds = function(selection) {
-						var array = []; //array of IDs of selected items 
-						for (var key in selection) {
-							  if (selection[key] == true) {
-							    array.push(key);
-							  }
+						var array = []; // array of IDs of selected items
+						for ( var key in selection) {
+							if (selection[key] == true) {
+								array.push(key);
+							}
 						}
 						return array;
 					};
-					
+
 					$scope.unselectStationById = function(id) {
 						for (var i = 0; i < $scope.search.stations.length; i++) {
-							if ($scope.search.stations[i] == id){
+							if ($scope.search.stations[i] == id) {
 								$scope.search.stations.splice(i, 1);
 								break;
 							}
 						}
 					};
-					
+
 					$scope.stationSelectionChanged = function($item, $model) {
-						if ($model == $scope.allStationsItem.id){
-							$scope.search.stations = [$scope.allStationsItem.id];
+						if ($model == $scope.allStationsItem.id) {
+							$scope.search.stations = [ $scope.allStationsItem.id ];
 						} else {
-							$scope.unselectStationById($scope.allStationsItem.id);
+							$scope
+									.unselectStationById($scope.allStationsItem.id);
 						}
 					};
-					
+
 					$scope.onDoubleClick = function(entity) {
-						$scope.search.stations = [entity.id];
+						$scope.search.stations = [ entity.id ];
 						$scope.performSearch();
 					};
-					
+
 					$scope.onClickWithCtrl = function(entity) {
 						$scope.unselectStationById($scope.allStationsItem.id);
-						
+
 						for (var i = 0; i < $scope.search.stations.length; i++) {
-							if ($scope.search.stations[i] == entity.id){
+							if ($scope.search.stations[i] == entity.id) {
 								return;
 							}
 						}
-						var newArray = [entity.id];
+						var newArray = [ entity.id ];
 						newArray.push.apply(newArray, $scope.search.stations);
 						$scope.search.stations = newArray;
 					};
-					
-					$scope.setMendelAsSelected = function(){
+
+					$scope.setMendelAsSelected = function() {
 						for (var i = 0; i < $scope.stationList.length; i++) {
-							if ($scope.stationList[i].name == "Mendel"){
-								$scope.search.stations = [$scope.stationList[i].id];
+							if ($scope.stationList[i].name == "Mendel") {
+								$scope.search.stations = [ $scope.stationList[i].id ];
 								return true;
 							}
 						}
 						return false;
 					}
-					
-					$scope.setOzoneAsSelected = function(){
+
+					$scope.setOzoneAsSelected = function() {
 						for (var i = 0; i < $scope.phenomenonTypeList.length; i++) {
-							if ($scope.phenomenonTypeList[i].name == "Ozone"){
+							if ($scope.phenomenonTypeList[i].name == "Ozone") {
 								$scope.search.phenomenonTypes = {};
 								$scope.search.phenomenonTypes[$scope.phenomenonTypeList[i].id] = true;
 								return true;
@@ -163,50 +186,54 @@ angular
 						}
 						return false;
 					}
-					
-//					$scope.getStationById = function(id){
-//						for (var i = 0; i < $scope.stationList.length; i++) {
-//							if ($scope.stationList[i].id == id){
-//								return $scope.stationList[i];
-//							}
-//						}
-//						return null;
-//					}
-					
-					$scope.getPhenomenonById = function(id){
+
+					// $scope.getStationById = function(id){
+					// for (var i = 0; i < $scope.stationList.length; i++) {
+					// if ($scope.stationList[i].id == id){
+					// return $scope.stationList[i];
+					// }
+					// }
+					// return null;
+					// }
+
+					$scope.getPhenomenonById = function(id) {
 						for (var i = 0; i < $scope.phenomenonTypeList.length; i++) {
-							if ($scope.phenomenonTypeList[i].id == id){
+							if ($scope.phenomenonTypeList[i].id == id) {
 								return $scope.phenomenonTypeList[i];
 							}
 						}
 						return null;
 					}
-					
-					$scope.switchChart = function(){
-						if ($scope.searchResults.length > 10){
+
+					$scope.switchChart = function() {
+						if ($scope.searchResults.length > 10) {
 							$scope.chart = $scope.barChart;
 						} else {
 							$scope.chart = $scope.lineChart;
 							$scope.panels.open2 = true;
 						}
 					}
-					
+
 					/**
-					 * This method should be called after stations and phenomenons lists are downloaded.
-					 * If station or phenomenon aren't selected by user the method try to set default values for first search.
-					 * Whenever both default station and phenomenon are set then the performSearch() is called.
+					 * This method should be called after stations and
+					 * phenomenons lists are downloaded. If station or
+					 * phenomenon aren't selected by user the method try to set
+					 * default values for first search. Whenever both default
+					 * station and phenomenon are set then the performSearch()
+					 * is called.
 					 */
-					$scope.initialSearch = function(){
+					$scope.initialSearch = function() {
 						var stationFound = true;
 						var phenomenonFound = true;
-						
-						if ($scope.search.stations.length == 0){
+
+						if ($scope.search.stations.length == 0) {
 							stationFound = $scope.setMendelAsSelected();
 						}
-						if ($scope.selectionToArrayOfIds($scope.search.phenomenonTypes).length == 0){
+						if ($scope
+								.selectionToArrayOfIds($scope.search.phenomenonTypes).length == 0) {
 							phenomenonFound = $scope.setOzoneAsSelected();
 						}
-						if (stationFound && phenomenonFound){
+						if (stationFound && phenomenonFound) {
 							$scope.performSearch();
 						}
 					}
