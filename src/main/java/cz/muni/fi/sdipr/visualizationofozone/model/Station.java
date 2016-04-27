@@ -20,7 +20,9 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(name = "Stations", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "country" }) })
-@NamedQueries({ @NamedQuery(name = "Station.deleteAll", query = "DELETE FROM Station"),
+@NamedQueries({
+		@NamedQuery(name = "Station.listAll", query = "SELECT DISTINCT s FROM Station s ORDER BY s.name, s.country"),
+		@NamedQuery(name = "Station.deleteAll", query = "DELETE FROM Station"),
 		@NamedQuery(name = "Station.getAllIds", query = "SELECT DISTINCT s.id FROM Station s ORDER BY s.id"),
 		@NamedQuery(name = "Station.findByNameAndCountry", query = "SELECT s FROM Station s WHERE s.name = :name AND s.country = :country") })
 public class Station implements Serializable {
