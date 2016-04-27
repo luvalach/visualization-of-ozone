@@ -7,8 +7,8 @@
 	<artifactId>visualization-of-ozone</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>Java EE 6 HTML5 Mobile Web Application</name>
-	<description>This project contains pre-requisites for demonstrating the use of JBoss Forge. The end-user will be instructed on how to scaffold a new application based on a pre-existing JPA entity. Refer to the embedded Eclipse cheatsheet for additional details.</description>
+	<name>Ozone state visualizer</name>
+	<description>This app visualizes OMDOAO3 and OMUVB products from Aura Validation Center. These products contains data measured by Aura satelite such as UV index, total ozone column density etc. This app was developed for needs of research station J. G. Mendel.</description>
 	<properties>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>

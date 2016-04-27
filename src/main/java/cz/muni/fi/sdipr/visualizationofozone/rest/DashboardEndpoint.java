@@ -16,10 +16,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import cz.muni.fi.sdipr.visualizationofozone.converter.MeasurementConvertor;
 import cz.muni.fi.sdipr.visualizationofozone.dao.MeasurementDao;
 import cz.muni.fi.sdipr.visualizationofozone.dao.StationDao;
 import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
-import cz.muni.fi.sdipr.visualizationofozone.rest.convertor.MeasurementConvertor;
 import cz.muni.fi.sdipr.visualizationofozone.rest.dto.DataPerPhenomenonsDTO;
 import cz.muni.fi.sdipr.visualizationofozone.rest.dto.DataPerStationDTO;
 

@@ -1,10 +1,10 @@
 package cz.muni.fi.sdipr.visualizationofozone.rest.dto;
 
 import java.io.Serializable;
-import cz.muni.fi.sdipr.visualizationofozone.model.Station;
-import javax.persistence.EntityManager;
 import java.util.Date;
+
 import javax.xml.bind.annotation.XmlRootElement;
+
 @XmlRootElement
 public class StationDTO implements Serializable {
 
@@ -17,32 +17,6 @@ public class StationDTO implements Serializable {
 	private Date lastUpdate;
 
 	public StationDTO() {
-	}
-
-	public StationDTO(final Station entity) {
-		if (entity != null) {
-			this.id = entity.getId();
-			this.name = entity.getName();
-			this.country = entity.getCountry();
-			this.fileName = entity.getFileName();
-			this.latitude = entity.getLatitude();
-			this.longitude = entity.getLongitude();
-			this.lastUpdate = entity.getLastUpdate();
-		}
-	}
-
-	public Station fromDTO(Station entity, EntityManager em) {
-		if (entity == null) {
-			entity = new Station();
-		}
-		entity.setName(this.name);
-		entity.setCountry(this.country);
-		entity.setFileName(this.fileName);
-		entity.setLatitude(this.latitude);
-		entity.setLongitude(this.longitude);
-		entity.setLastUpdate(this.lastUpdate);
-		entity = em.merge(entity);
-		return entity;
 	}
 
 	public Long getId() {

@@ -1,6 +1,5 @@
 package cz.muni.fi.sdipr.visualizationofozone.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -15,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import cz.muni.fi.sdipr.visualizationofozone.converter.StationConverter;
 import cz.muni.fi.sdipr.visualizationofozone.dao.StationDao;
 import cz.muni.fi.sdipr.visualizationofozone.model.Station;
 import cz.muni.fi.sdipr.visualizationofozone.rest.dto.StationDTO;
@@ -31,6 +31,9 @@ public class StationEndpoint {
 	@EJB
 	private StationDao dao;
 
+	@EJB
+	private StationConverter converter;
+
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
 	@Produces("application/json")
@@ -41,7 +44,7 @@ public class StationEndpoint {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		StationDTO dto = new StationDTO(entity);
+		StationDTO dto = converter.entityToDto(entity);
 		return Response.ok(dto).build();
 	}
 
@@ -49,13 +52,7 @@ public class StationEndpoint {
 	@Produces("application/json")
 	public List<StationDTO> listAll(@QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult) {
 		final List<Station> results = dao.listAll(startPosition, maxResult);
-		final List<StationDTO> resultsDaos = new ArrayList<StationDTO>();
-
-		for (Station searchResult : results) {
-			StationDTO dto = new StationDTO(searchResult);
-			resultsDaos.add(dto);
-		}
-
+		final List<StationDTO> resultsDaos = converter.entitiesToDtos(results);
 		return resultsDaos;
 	}
 }
