@@ -64,7 +64,7 @@
          Chart 
          <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': panels.open2, 'glyphicon-chevron-right': !panels.open2}"></i> 
       </uib-accordion-heading>
-      <ul ui-sortable ng-model="searchResults">
+      <ul ui-sortable="sortableOptions" ng-model="searchResults">
       	<div chart-directive ng-repeat="data in searchResults" data="data" station-list="stationList" phenomenon="getPhenomenonById(data.phenomenonTypeId)">
       	</div>
       </ul>
