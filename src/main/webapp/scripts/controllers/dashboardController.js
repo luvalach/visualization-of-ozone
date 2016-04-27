@@ -116,10 +116,6 @@ angular
 										}, successCallback, errorCallback);
 					};
 
-					// $scope.numberOfPages = function() {
-					// // Function is expected by searchFilter
-					// };
-
 					$scope.selectionToArrayOfIds = function(selection) {
 						var array = []; // array of IDs of selected items
 						for ( var key in selection) {

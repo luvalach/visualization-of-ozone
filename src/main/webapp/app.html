@@ -38,12 +38,6 @@
                     <nav class="sidebar-nav" ng-controller="NavController" role="navigation">
                         <div id="sidebar-entries" class="list-group">
                         	<a class="list-group-item" ng-class="{active: matchesRoute('Dashboard')}" href="#/Dashboard" data-toggle="offcanvas">Dashboard</a>
-                        	<a class="list-group-item" ng-class="{active: matchesRoute('DataControls')}" href="#/DataControls" data-toggle="offcanvas">Data Controls</a>
-                        	<a class="list-group-item" ng-class="{active: matchesRoute('Files')}" href="#/Files" data-toggle="offcanvas">Files</a>
-                        	<a class="list-group-item" ng-class="{active: matchesRoute('Measurements')}" href="#/Measurements" data-toggle="offcanvas">Measurements</a>
-                        	<a class="list-group-item" ng-class="{active: matchesRoute('PhenomenonTypes')}" href="#/PhenomenonTypes" data-toggle="offcanvas">Phenomenon Types</a>
-                        	<a class="list-group-item" ng-class="{active: matchesRoute('Sources')}" href="#/Sources" data-toggle="offcanvas">Sources</a>
-                        	<a class="list-group-item" ng-class="{active: matchesRoute('Stations')}" href="#/Stations" data-toggle="offcanvas">Stations</a>
                         </div>
                     </nav>
                 </div>
@@ -96,36 +90,11 @@
         
     <script src="scripts/app.js"></script>
     <script src="scripts/offcanvas.js"></script>
-    <script src="scripts/directives/datepicker.js"></script>
-    <script src="scripts/directives/timepicker.js"></script>
-    <script src="scripts/directives/datetimepicker.js"></script>
-    <script src="scripts/filters/startFromFilter.js"></script>
-    <script src="scripts/filters/genericSearchFilter.js"></script>
     <script src="scripts/services/flash.js"></script>
     <script src="scripts/services/locationParser.js"></script>
     <script src="scripts/controllers/flashController.js"></script>
-    <script src="scripts/services/fileFactory.js"></script>
-    <script src="scripts/controllers/newFileController.js"></script>
-    <script src="scripts/controllers/searchFileController.js"></script>
-    <script src="scripts/controllers/editFileController.js"></script>
-    <script src="scripts/services/measurementFactory.js"></script>
-    <script src="scripts/controllers/newMeasurementController.js"></script>
-    <script src="scripts/controllers/searchMeasurementController.js"></script>
-    <script src="scripts/controllers/editMeasurementController.js"></script>
     <script src="scripts/services/phenomenonTypeFactory.js"></script>
-    <script src="scripts/controllers/newPhenomenonTypeController.js"></script>
-    <script src="scripts/controllers/searchPhenomenonTypeController.js"></script>
-    <script src="scripts/controllers/editPhenomenonTypeController.js"></script>
-    <script src="scripts/services/sourceFactory.js"></script>
-    <script src="scripts/controllers/newSourceController.js"></script>
-    <script src="scripts/controllers/searchSourceController.js"></script>
-    <script src="scripts/controllers/editSourceController.js"></script>
     <script src="scripts/services/stationFactory.js"></script>
-    <script src="scripts/controllers/newStationController.js"></script>
-    <script src="scripts/controllers/searchStationController.js"></script>
-    <script src="scripts/controllers/editStationController.js"></script>
-    <script src="scripts/controllers/dataControlController.js"></script>
-    
     <script src="scripts/controllers/dashboardController.js"></script>
 	<script src="scripts/services/dashboardFactory.js"></script>
 	<script src="scripts/directives/cesium.js"></script>
