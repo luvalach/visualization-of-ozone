@@ -3,7 +3,6 @@ package cz.muni.fi.sdipr.visualizationofozone.downloading.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -12,6 +11,7 @@ import javax.inject.Inject;
 import javax.jms.JMSContext;
 import javax.jms.Queue;
 
+import org.jboss.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -73,8 +73,7 @@ public class DownloadManager {
 				links.add(link.attr("href"));
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("Failed to connect to '" + baseUrl + "', can't get list of links to files.", e);
 		}
 		return links;
 	}

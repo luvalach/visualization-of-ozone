@@ -10,10 +10,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.logging.Logger;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import org.jboss.logging.Logger;
+
+import cz.muni.fi.sdipr.visualizationofozone.configuration.Configuration;
 import cz.muni.fi.sdipr.visualizationofozone.model.File;
 import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
 import cz.muni.fi.sdipr.visualizationofozone.model.PhenomenonType;
@@ -24,20 +27,26 @@ public class FileParser {
 
 	private final static Logger LOGGER = Logger.getLogger(FileParser.class.toString());
 
+	@EJB
+	Configuration config;
+
 	public static final String LATITUDE_ATTR = "Latitude:";
 	public static final String LONGITUDE_ATTR = "Longitude:";
 	public static final int DATE_TIME_COLUM_NO = 0;
 	public static final int OYONE_COLUMN_NO = 11;
+	public static final String DOCUMENT_DATE_FORMAT = "yyyyMMdd'T'HHmmssSSS'Z'";
+	public static final String CONFIG_DATE_FORMAT = "dd.MM.yyyy";
 
 	private Station station;
 	private List<Measurement> measurements;
-	private SimpleDateFormat simpleDateFormat;
+	private SimpleDateFormat documentDateFormat;
 	private BufferedReader reader;
 	private File file;
+	private Long updateFrom = Long.MIN_VALUE;
 
 	public FileParser() {
-		simpleDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS'Z'");
-		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		documentDateFormat = new SimpleDateFormat(DOCUMENT_DATE_FORMAT);
+		documentDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
 
 	public void parseFile(InputStream inputStream, File file, List<Measurement> measurements)
@@ -47,11 +56,33 @@ public class FileParser {
 		this.station = file.getStation();
 		this.file = file;
 
+		configureParser();
+
 		parseHeaderLine();
 
 		skipIrrelevantLines();
 
 		parseDataLines();
+	}
+
+	private void configureParser() {
+		String startFromString = config.getPropertyValue(Configuration.DM_START_DOWNLOADING_FROM_PROPERTY);
+
+		if (startFromString == null) {
+			LOGGER.debug("File parser  could not find '" + Configuration.DM_START_DOWNLOADING_FROM_PROPERTY
+					+ "' property. Whole measurements history will be stored.");
+			return;
+		}
+
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat(CONFIG_DATE_FORMAT);
+			Date startFromDate = sdf.parse(startFromString);
+			this.updateFrom = startFromDate.getTime();
+		} catch (ParseException e) {
+			LOGGER.error("The value of the property '" + Configuration.DM_START_DOWNLOADING_FROM_PROPERTY
+					+ "' can't be cast to date. Property value must be in format " + CONFIG_DATE_FORMAT
+					+ ". Whole measurements history will be stored.");
+		}
 	}
 
 	private void parseHeaderLine() throws IOException {
@@ -145,7 +176,7 @@ public class FileParser {
 		Date dateTime = null;
 
 		try {
-			dateTime = simpleDateFormat.parse(splitedLine[0]);
+			dateTime = documentDateFormat.parse(splitedLine[0]);
 		} catch (ParseException e) {
 			throw new IllegalArgumentException("Can't convert string to Date. String: " + splitedLine[0]);
 		}

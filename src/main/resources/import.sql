@@ -17,3 +17,6 @@ INSERT INTO phenomenon_types (id, columnno, description, name, nameshortcut, uni
 INSERT INTO phenomenon_types (id, columnno, description, name, nameshortcut, unit, unitshortcut, source_id) VALUES (11, 17, 'Clear Sky Erythemal Daily Dose (J/m^2)', 'CSEDDose', 'CSEDDose', 'J/m^2', 'J/m^2', 2);
 INSERT INTO phenomenon_types (id, columnno, description, name, nameshortcut, unit, unitshortcut, source_id) VALUES (13, 10, 'Solar Zenith Angle (degree)', 'SZA', 'SZA', 'degree', '°', 2);
 INSERT INTO phenomenon_types (id, columnno, description, name, nameshortcut, unit, unitshortcut, source_id) VALUES (14, 23, 'Cloud Optical Thickness (dimensionless)', 'CldOpt', 'CldOpt', 'dimensionless', NULL, 2);
+
+INSERT INTO config_properties (name, value, description) VALUES ('DOWNLOAD_SCHEDULER_EXPRESSION','0 55 22 * * * *','Download schedule expression determines the time when the database should be refreshed (when the measures should be downloaded from AVDC).');
+INSERT INTO config_properties (name, value, description) VALUES ('DOWNLOAD_MEASUREMENTS_FROM_DATE','1.1.2013','System store only measures after defined day. Date has to be in fromat dd.MM.yyyy . For example "1.1.2010" ');
