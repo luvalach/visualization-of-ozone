@@ -1,6 +1,5 @@
 package cz.muni.fi.sdipr.visualizationofozone.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -15,7 +14,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(name = "Sources")
-public class Source implements Serializable {
+public class Source implements BaseEntity<Long> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +29,12 @@ public class Source implements Serializable {
 	@OneToMany(mappedBy = "source")
 	private List<PhenomenonType> phenomenonType;
 
+	@Override
 	public Long getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

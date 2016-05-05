@@ -1,14 +1,11 @@
 package cz.muni.fi.sdipr.visualizationofozone.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -17,9 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "Files")
-@NamedQueries({ @NamedQuery(name = "File.getById", query = "SELECT f FROM File f WHERE f.fileName = :fileName"),
-		@NamedQuery(name = "File.deleteAll", query = "DELETE FROM File") })
-public class File implements Serializable {
+public class File implements BaseEntity<String> {
 
 	@Id
 	private String fileName;
@@ -30,6 +25,16 @@ public class File implements Serializable {
 	private Date lastUpdate;
 	private Date lastRowDate;
 	private static final long serialVersionUID = 1L;
+
+	@Override
+	public String getId() {
+		return this.getFileName();
+	}
+
+	@Override
+	public void setId(String id) {
+		this.setFileName(id);
+	}
 
 	public String getFileName() {
 		return fileName;
@@ -123,5 +128,4 @@ public class File implements Serializable {
 			return false;
 		return true;
 	}
-
 }

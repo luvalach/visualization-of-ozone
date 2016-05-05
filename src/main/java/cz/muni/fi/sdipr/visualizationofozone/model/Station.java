@@ -1,6 +1,5 @@
 package cz.muni.fi.sdipr.visualizationofozone.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -20,12 +19,9 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(name = "Stations", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "country" }) })
-@NamedQueries({
-		@NamedQuery(name = "Station.listAll", query = "SELECT DISTINCT s FROM Station s ORDER BY s.name, s.country"),
-		@NamedQuery(name = "Station.deleteAll", query = "DELETE FROM Station"),
-		@NamedQuery(name = "Station.getAllIds", query = "SELECT DISTINCT s.id FROM Station s ORDER BY s.id"),
+@NamedQueries({ @NamedQuery(name = "Station.getAllIds", query = "SELECT DISTINCT s.id FROM Station s ORDER BY s.id"),
 		@NamedQuery(name = "Station.findByNameAndCountry", query = "SELECT s FROM Station s WHERE s.name = :name AND s.country = :country") })
-public class Station implements Serializable {
+public class Station implements BaseEntity<Long> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stations_id_seq")
@@ -43,10 +39,12 @@ public class Station implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdate;
 
+	@Override
 	public Long getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

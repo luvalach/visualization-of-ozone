@@ -1,6 +1,5 @@
 package cz.muni.fi.sdipr.visualizationofozone.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -19,11 +18,9 @@ import javax.persistence.Table;
 @IdClass(MeasurementKey.class)
 @NamedQueries({
 		@NamedQuery(name = "Measurement.getByIdClass", query = "SELECT m FROM Measurement m WHERE m.dateTime = :dateTime AND m.phenomenonTypeId = :phenomenonTypeId AND m.stationId = :stationId"),
-		@NamedQuery(name = "Measurement.listAll", query = "SELECT DISTINCT m FROM Measurement m ORDER BY m.dateTime DESC, m.stationId, m.phenomenonTypeId"),
 		@NamedQuery(name = "Measurement.findByDates", query = "SELECT DISTINCT m FROM Measurement m WHERE m.dateTime BETWEEN :fromDate AND :toDate ORDER BY m.stationId, m.phenomenonTypeId, m.dateTime"),
-		@NamedQuery(name = "Measurement.findByStationPhenomenonDates", query = "SELECT DISTINCT m FROM Measurement m WHERE m.stationId = :stationId AND m.phenomenonTypeId = :phenomenonTypeId AND(m.dateTime BETWEEN :fromDate AND :toDate) ORDER BY m.dateTime"),
-		@NamedQuery(name = "Measurement.deleteAll", query = "DELETE FROM Measurement") })
-public class Measurement implements Serializable {
+		@NamedQuery(name = "Measurement.findByStationPhenomenonDates", query = "SELECT DISTINCT m FROM Measurement m WHERE m.stationId = :stationId AND m.phenomenonTypeId = :phenomenonTypeId AND(m.dateTime BETWEEN :fromDate AND :toDate) ORDER BY m.dateTime") })
+public class Measurement implements BaseEntity<MeasurementKey> {
 
 	@Id
 	private Date dateTime;
@@ -33,6 +30,18 @@ public class Measurement implements Serializable {
 	private long phenomenonTypeId;
 	private float value;
 	private static final long serialVersionUID = 1L;
+
+	@Override
+	public MeasurementKey getId() {
+		return new MeasurementKey(this.dateTime, this.stationId, this.phenomenonTypeId);
+	}
+
+	@Override
+	public void setId(MeasurementKey id) {
+		this.dateTime = id.getDateTime();
+		this.stationId = id.getStationId();
+		this.phenomenonTypeId = id.getPhenomenonTypeId();
+	}
 
 	public Date getDateTime() {
 		return dateTime;

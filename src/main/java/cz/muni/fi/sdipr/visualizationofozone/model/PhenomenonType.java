@@ -1,7 +1,5 @@
 package cz.muni.fi.sdipr.visualizationofozone.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Phenomenon_types")
-public class PhenomenonType implements Serializable {
+public class PhenomenonType implements BaseEntity<Long> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +25,12 @@ public class PhenomenonType implements Serializable {
 	private String unitShortcut;
 	private String description;
 
+	@Override
 	public Long getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

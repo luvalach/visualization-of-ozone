@@ -8,6 +8,16 @@ public class MeasurementKey implements Serializable {
 	private long stationId;
 	private long phenomenonTypeId;
 
+	public MeasurementKey() {
+	}
+
+	public MeasurementKey(Date dateTime, long stationId, long phenomenonTypeId) {
+		super();
+		this.dateTime = dateTime;
+		this.stationId = stationId;
+		this.phenomenonTypeId = phenomenonTypeId;
+	}
+
 	public Date getDateTime() {
 		return dateTime;
 	}

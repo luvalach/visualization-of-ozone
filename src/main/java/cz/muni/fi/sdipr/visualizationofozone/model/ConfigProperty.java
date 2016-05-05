@@ -1,24 +1,28 @@
 package cz.muni.fi.sdipr.visualizationofozone.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "Config_properties")
-@NamedQueries({
-		@NamedQuery(name = "ConfigProperty.listAll", query = "SELECT DISTINCT c FROM ConfigProperty c ORDER BY c.name") })
-public class ConfigProperty implements Serializable {
+public class ConfigProperty implements BaseEntity<String> {
 
 	@Id
 	private String name;
 	private String value;
 	private String description;
 	private static final long serialVersionUID = 1L;
+
+	@Override
+	public String getId() {
+		return name;
+	}
+
+	@Override
+	public void setId(String id) {
+		this.name = name;
+	}
 
 	public String getName() {
 		return name;
@@ -84,5 +88,4 @@ public class ConfigProperty implements Serializable {
 			return false;
 		return true;
 	}
-
 }
