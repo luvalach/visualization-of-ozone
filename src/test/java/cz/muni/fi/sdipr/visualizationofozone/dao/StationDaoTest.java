@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import javax.ejb.EJB;
 import javax.transaction.Status;
 
@@ -43,8 +40,7 @@ public class StationDaoTest extends GenericDaoTest<Station, Long> {
 	}
 
 	@Override
-	public <String> void callTestUpdate(Consumer<String> setterMethod, Supplier<String> getterMethod, String newValue)
-			throws Exception {
+	public void callTestUpdate() throws Exception {
 		testUpdate(v -> e1.setCountry(v), () -> e1.getCountry(), "New updated country.");
 	}
 
