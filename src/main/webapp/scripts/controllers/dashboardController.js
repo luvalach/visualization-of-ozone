@@ -8,7 +8,7 @@ angular
 					$scope.search = {
 						stations : [],
 						date : {
-							startDate : moment().subtract(6, 'days'),
+							startDate : moment().subtract(1, 'year'),
 							endDate : moment()
 						}
 					};
