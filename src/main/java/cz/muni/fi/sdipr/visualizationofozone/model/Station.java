@@ -32,8 +32,6 @@ public class Station implements BaseEntity<Long> {
 	private String name;
 	@NotBlank
 	private String country;
-	@Column(unique = true)
-	private String fileName;
 	private float latitude;
 	private float longitude;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -65,14 +63,6 @@ public class Station implements BaseEntity<Long> {
 		this.country = country;
 	}
 
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
 	public float getLatitude() {
 		return latitude;
 	}
@@ -102,7 +92,6 @@ public class Station implements BaseEntity<Long> {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
-		result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
 		result = prime * result + Float.floatToIntBits(latitude);
@@ -124,11 +113,6 @@ public class Station implements BaseEntity<Long> {
 			if (other.country != null)
 				return false;
 		} else if (!country.equals(other.country))
-			return false;
-		if (fileName == null) {
-			if (other.fileName != null)
-				return false;
-		} else if (!fileName.equals(other.fileName))
 			return false;
 		if (id == null) {
 			if (other.id != null)
