@@ -30,6 +30,7 @@ public abstract class GenericConverterTest<T1, T2> {
 				.addPackages(true, "cz.muni.fi.sdipr.visualizationofozone.model")
 				.addPackages(true, "cz.muni.fi.sdipr.visualizationofozone.rest.dto")
 				.addAsResource("dozerBeanMapping.xml", "dozerBeanMapping.xml")
+				.addAsResource("beanmapping.xsd", "beanmapping.xsd")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 
