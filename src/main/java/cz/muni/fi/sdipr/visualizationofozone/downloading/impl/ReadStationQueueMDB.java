@@ -24,6 +24,14 @@ import cz.muni.fi.sdipr.visualizationofozone.model.File;
 import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
 import cz.muni.fi.sdipr.visualizationofozone.model.Station;
 
+/**
+ * Message driven bean which consumes messages from ReadStationQueue. Received
+ * message should contains URL address of file on AVDC server. This class serves
+ * to downloading, parsing and storing these files.
+ * 
+ * @author Lukas
+ *
+ */
 @MessageDriven(name = "ReadStationQueueMDB", activationConfig = {
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
 		@ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/ReadStationQueue"),
@@ -33,6 +41,7 @@ import cz.muni.fi.sdipr.visualizationofozone.model.Station;
 public class ReadStationQueueMDB implements MessageListener {
 
 	private final static Logger LOGGER = Logger.getLogger(ReadStationQueueMDB.class.toString());
+
 	private static Date zeroDate;
 
 	@EJB
@@ -47,6 +56,12 @@ public class ReadStationQueueMDB implements MessageListener {
 	@EJB
 	private FileDao fileDao;
 
+	/**
+	 * Entry method of message driven mean. This method is executed when JMS
+	 * message is delivered. The delivered message should contains file URL
+	 * address. This address will be extracted and file will be downloaded and
+	 * parsed. Then data will be persisted.
+	 */
 	@Override
 	public void onMessage(Message rcvMessage) {
 		DownloadJobDTO downloadJob = null;
@@ -69,6 +84,18 @@ public class ReadStationQueueMDB implements MessageListener {
 		}
 	}
 
+	/**
+	 * Extract {@link DownloadJobDTO} from received message.
+	 * 
+	 * @param rcvMessage
+	 *            received JMS message.
+	 * @return {@link DownloadJobDTO} which contains information about file
+	 *         which should by downloaded.
+	 * @throws JMSException
+	 *             when can't get message body from the message.
+	 * @throws IllegalArgumentException
+	 *             when receive message of wrong type.
+	 */
 	private DownloadJobDTO messageToFileDto(Message rcvMessage) throws JMSException {
 		if (rcvMessage instanceof ObjectMessage) {
 			ObjectMessage objectMessage = (ObjectMessage) rcvMessage;
@@ -80,11 +107,19 @@ public class ReadStationQueueMDB implements MessageListener {
 		}
 	}
 
+	/**
+	 * This method download given file from AVDC server. Then the file will be
+	 * parsed and stored in database.
+	 * 
+	 * @param downloadJob
+	 *            DTO which holds data about the single file on AVDC server.
+	 * @throws IOException
+	 *             when some IO error occures.
+	 */
 	private void downloadDataFile(DownloadJobDTO downloadJob) throws IOException {
 		List<Measurement> measurements = new ArrayList<>();
 
 		try (InputStream is = downloadJob.getUrl().openStream();) {
-			// Station tmpStation;
 			File file = fileDao.findByFileName(downloadJob.getFileName());
 
 			if (file == null) {
@@ -94,13 +129,8 @@ public class ReadStationQueueMDB implements MessageListener {
 				file.setSource(downloadJob.getSource());
 				file.setLastUpdate(this.getZeroDate());
 				file.setLastRowDate(this.getZeroDate());
-
-				// fileDao.create(file);
-
-				// tmpStation = new Station();
-			} else {
-				// tmpStation = file.getStation();
 			}
+
 			fileParser.parseFile(is, file, measurements);
 
 			storeData(file, measurements);
@@ -112,7 +142,8 @@ public class ReadStationQueueMDB implements MessageListener {
 
 	/**
 	 * Return date of start of the epoch. Date should be older that all
-	 * measurements.
+	 * measurements. This date may be used as default parser configuration which
+	 * means "store whole history of measurements".
 	 * 
 	 * @return date of start of the epoch.
 	 */
@@ -125,6 +156,16 @@ public class ReadStationQueueMDB implements MessageListener {
 		return ReadStationQueueMDB.zeroDate;
 	}
 
+	/**
+	 * Store or update file and station record and store all attached
+	 * measurements.
+	 * 
+	 * @param file
+	 *            file which was downloaded. File entity which contains a
+	 *            station.
+	 * @param measurements
+	 *            Measures related to station in given file.
+	 */
 	private void storeData(File file, List<Measurement> measurements) {
 		file.setLastUpdate(Calendar.getInstance().getTime());
 
@@ -144,5 +185,3 @@ public class ReadStationQueueMDB implements MessageListener {
 		}
 	}
 }
-// vycisteni jms queue
-// http://stackoverflow.com/questions/9529214/how-to-delete-a-message-from-the-jms-queue

@@ -22,6 +22,13 @@ import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
 import cz.muni.fi.sdipr.visualizationofozone.model.PhenomenonType;
 import cz.muni.fi.sdipr.visualizationofozone.model.Station;
 
+/**
+ * FileParser extracts data from single file form AVDC server. Parser reads data
+ * from input stream and extract phenomenons defined for station's source.
+ * 
+ * @author Lukas
+ *
+ */
 @Stateless
 public class FileParser {
 
@@ -32,8 +39,6 @@ public class FileParser {
 
 	public static final String LATITUDE_ATTR = "Latitude:";
 	public static final String LONGITUDE_ATTR = "Longitude:";
-	public static final int DATE_TIME_COLUM_NO = 0;
-	public static final int OYONE_COLUMN_NO = 11;
 	public static final String DOCUMENT_DATE_FORMAT = "yyyyMMdd'T'HHmmssSSS'Z'";
 	public static final String CONFIG_DATE_FORMAT = "dd.MM.yyyy";
 
@@ -49,6 +54,25 @@ public class FileParser {
 		documentDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
 
+	/**
+	 * Entry method of FileParser. File given as input stream will be read. Only
+	 * new, not-persisted, measurements will be added into list of measurements.
+	 * Information about file update will be set into file entity. Station in
+	 * the file record will be also updated. There is side effect used to return
+	 * the data.
+	 * 
+	 * @param inputStream
+	 *            opened input stream to file of station on AVDC.
+	 * @param file
+	 *            entity which holds data about last update of file.
+	 * @param measurements
+	 *            list of new measurements which will be filled by parser.
+	 * @throws IOException
+	 *             when IO exception occurs.
+	 * @throws IllegalArgumentException
+	 *             when parser cannot parse data from file due to bad/unexpected
+	 *             file format.
+	 */
 	public void parseFile(InputStream inputStream, File file, List<Measurement> measurements)
 			throws IOException, IllegalArgumentException {
 		this.reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
@@ -65,6 +89,10 @@ public class FileParser {
 		parseDataLines();
 	}
 
+	/**
+	 * Read configuration and set 'updateFrom' property. All measurements oldest
+	 * that date defined in 'updateFrom' property will be ignored.
+	 */
 	private void configureParser() {
 		String startFromString = config.getPropertyValue(Configuration.DM_START_DOWNLOADING_FROM_PROPERTY);
 
@@ -85,6 +113,12 @@ public class FileParser {
 		}
 	}
 
+	/**
+	 * Parse file header which contains station name, country, latitude and
+	 * longitude.
+	 * 
+	 * @throws IOException
+	 */
 	private void parseHeaderLine() throws IOException {
 		String line = null;
 
@@ -104,6 +138,12 @@ public class FileParser {
 		station.setLastUpdate(new Date());
 	}
 
+	/**
+	 * Parse name and country and set these values into station entity.
+	 * 
+	 * @param line
+	 *            line from which name and country should be parsed
+	 */
 	private void setNameAndCountry(String line) {
 		String[] nameAndTrash = line.split(" *[a-z,A-Z]+:", 2);
 
@@ -117,6 +157,15 @@ public class FileParser {
 		station.setCountry(nameAndCountry.length < 2 ? "" : nameAndCountry[1]);
 	}
 
+	/**
+	 * Get value of attribute from single line of text.
+	 * 
+	 * @param line
+	 *            line of text from file
+	 * @param attribute
+	 *            name of attribute
+	 * @return value after attribute name as float
+	 */
 	private float getAttributeValue(String line, String attribute) {
 		int attrIndex = line.indexOf(attribute);
 
@@ -139,6 +188,11 @@ public class FileParser {
 		}
 	}
 
+	/**
+	 * Skips all rows until it finds a table header.
+	 * 
+	 * @throws IOException
+	 */
 	private void skipIrrelevantLines() throws IOException {
 		while (reader.ready()) {
 			String line = reader.readLine();
@@ -149,6 +203,14 @@ public class FileParser {
 		}
 	}
 
+	/**
+	 * Check if actual line is a table header. The table header pattern defined
+	 * in Source is used.
+	 * 
+	 * @param line
+	 *            line of text form file
+	 * @return true if line is table header, otherwise return false
+	 */
 	private boolean parseLineAndFindTableHeader(String line) {
 		if (line.matches(file.getSource().getTableHeaderPattern())) {
 			return true;
@@ -156,6 +218,11 @@ public class FileParser {
 		return false;
 	}
 
+	/**
+	 * Read and parse data lines one by one
+	 * 
+	 * @throws IOException
+	 */
 	private void parseDataLines() throws IOException {
 		String line;
 		while ((line = reader.readLine()) != null) {
@@ -166,6 +233,15 @@ public class FileParser {
 		}
 	}
 
+	/**
+	 * Parse single data line. Only records measured after last update of file
+	 * will be taken into account. Value of all phenomenons defined for source
+	 * of file will be added into list.
+	 * 
+	 * @param line
+	 *            line of single measurement
+	 * @return list of new measurements
+	 */
 	private List<Measurement> parseDataLine(String line) {
 		if (line.trim().length() == 0) {
 			return null; // empty line

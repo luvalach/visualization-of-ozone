@@ -19,4 +19,4 @@ INSERT INTO phenomenon_types (id, columnno, description, name, nameshortcut, uni
 INSERT INTO phenomenon_types (id, columnno, description, name, nameshortcut, unit, unitshortcut, source_id) VALUES (14, 9, 'Distance between the station and the CTP (km)', 'Distance (OMUVB)', 'Dis', 'Kilometers', 'Km', 2);
 
 INSERT INTO config_properties (name, value, description) VALUES ('DOWNLOAD_SCHEDULER_EXPRESSION','0 55 22 * * * *','Download schedule expression determines the time when the database should be refreshed (when the measures should be downloaded from AVDC).');
-INSERT INTO config_properties (name, value, description) VALUES ('DOWNLOAD_MEASUREMENTS_FROM_DATE','1.1.2013','System store only measures after defined day. Date has to be in fromat dd.MM.yyyy . For example "1.1.2010" ');
+INSERT INTO config_properties (name, value, description) VALUES ('DOWNLOAD_MEASUREMENTS_FROM_DATE','1.1.2014','System store only measures after defined day. Date has to be in fromat dd.MM.yyyy . For example "1.1.2010" ');

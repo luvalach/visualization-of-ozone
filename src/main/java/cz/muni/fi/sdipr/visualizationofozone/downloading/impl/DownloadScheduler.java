@@ -15,6 +15,13 @@ import javax.ejb.TimerService;
 
 import cz.muni.fi.sdipr.visualizationofozone.configuration.Configuration;
 
+/**
+ * This singleton register EJB timer which should execute database refreshment
+ * process.
+ * 
+ * @author Lukas
+ *
+ */
 @Singleton
 @Startup
 public class DownloadScheduler {
@@ -42,12 +49,25 @@ public class DownloadScheduler {
 		Timer timer = timerService.createCalendarTimer(schedule, timerConfig);
 	}
 
+	/**
+	 * The method automatically called by timer service when expired. This
+	 * method executes Download Manager which refresh database.
+	 * 
+	 * @param timer
+	 *            timer object
+	 */
 	@Timeout
 	public void programmaticTimeout(Timer timer) {
 		LOGGER.info("Scheduler executing database update.");
 		downloadManager.refreshDatabase();
 	}
 
+	/**
+	 * Create and return default scheduler expression. Execution time will be
+	 * set to every day midnight.
+	 * 
+	 * @return scheduler expression configured to every day midnigth.
+	 */
 	private ScheduleExpression getDefaultScheduleExpression() {
 		ScheduleExpression schedule = new ScheduleExpression();
 		schedule.minute("0");
@@ -56,6 +76,14 @@ public class DownloadScheduler {
 		return schedule;
 	}
 
+	/**
+	 * Create and return scheduler expression. Execution time will be set
+	 * according to user configuration.
+	 * 
+	 * @return scheduler expression configured by user settings by the
+	 *         {@value cz.muni.fi.sdipr.visualizationofozone.configuration.Configuration#DM_TIMER_PROPERTY}
+	 *         property.
+	 */
 	private ScheduleExpression loadScheduleExpression() {
 		String expresion = config.getPropertyValue(Configuration.DM_TIMER_PROPERTY);
 
