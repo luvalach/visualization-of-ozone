@@ -257,7 +257,7 @@ public class FileParser {
 			throw new IllegalArgumentException("Can't convert string to Date. String: " + splitedLine[0]);
 		}
 
-		if (dateTime.getTime() > this.file.getLastRowDate().getTime()) {
+		if (measureShouldBeStored(dateTime)) {
 			List<Measurement> measurementsOnRow = new ArrayList<Measurement>();
 
 			for (PhenomenonType phenomenon : file.getSource().getPhenomenonType()) {
@@ -282,5 +282,23 @@ public class FileParser {
 			return null;
 		}
 
+	}
+
+	/**
+	 * Decides whether the measurement with given dateTime should be added to
+	 * measurements result list (and then stored in the database). Only
+	 * measurements new from last file update and newer than "updateFrom"
+	 * property should be stored.
+	 * 
+	 * @param measurementDateTime
+	 *            date and time of act of measurement
+	 * @return true if given dateTime is newer than last file update and newer
+	 *         than date configured by
+	 *         {@value cz.muni.fi.sdipr.visualizationofozone.configuration.Configuration#DM_START_DOWNLOADING_FROM_PROPERTY}
+	 *         parameter.
+	 */
+	private boolean measureShouldBeStored(Date measurementDateTime) {
+		return measurementDateTime.getTime() > this.file.getLastRowDate().getTime()
+				&& measurementDateTime.getTime() >= this.updateFrom;
 	}
 }
