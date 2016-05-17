@@ -2,8 +2,13 @@ package cz.muni.fi.sdipr.visualizationofozone.rest.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 public class DataPerStationDTO {
+
+	@NotNull
 	private Long stationId;
+	@NotNull
 	private List<Number[]> measurements;
 
 	public DataPerStationDTO(Long stationId) {

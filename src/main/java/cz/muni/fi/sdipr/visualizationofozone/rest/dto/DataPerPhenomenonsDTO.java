@@ -3,12 +3,15 @@ package cz.muni.fi.sdipr.visualizationofozone.rest.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class DataPerPhenomenonsDTO implements Serializable {
 
+	@NotNull
 	private Long phenomenonTypeId;
+	@NotNull
 	private List<DataPerStationDTO> dataPerStations;
 
 	public DataPerPhenomenonsDTO(Long phenomenonTypeId, List<DataPerStationDTO> stationData) {
