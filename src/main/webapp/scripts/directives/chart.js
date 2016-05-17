@@ -193,6 +193,7 @@ angular
 									if (station == null) {
 										$log.error('Station with id '
 												+ stationId + 'not found.');
+										continue;
 									}
 
 									if (measurementsLength > 0) {
