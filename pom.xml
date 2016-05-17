@@ -76,11 +76,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>jsr250-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<!-- jsoup HTML parser library @ http://jsoup.org/ -->
 			<!-- used for DOM parsing -->
 			<groupId>org.jsoup</groupId>
