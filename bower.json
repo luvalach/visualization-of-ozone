@@ -21,17 +21,20 @@
     "tests"
   ],
   "dependencies": {
-    "ZingChart-AngularJS": "zingchart-angularjs#^1.0.6",
-    "ui-select": "angular-ui-select#^0.14.9",
-    "angular-sanitize": "^1.5.0",
-    "angular-daterangepicker": "^0.2.2",
-    "cesium": "cesiumjs#^1.19.0",
-    "angular-bootstrap": "^1.2.5",
-    "modernizr": "^3.3.1",
-    "angular-route": "^1.5.3",
-    "angular-resource": "^1.5.3",
-    "angular": "^1.5.3",
-    "angular-ui-sortable": "^0.14.0",
-    "jquery-ui": "^1.11.4"
+    "ZingChart-AngularJS": "zingchart-angularjs#1.0.6",
+    "ui-select": "angular-ui-select#0.14.9",
+    "angular-sanitize": "1.5.2",
+    "angular-daterangepicker": "0.2.2",
+    "cesium": "cesiumjs#^1.21.0",
+    "angular-bootstrap": "1.2.5",
+    "modernizr": "3.3.1",
+    "angular-route": "1.5.3",
+    "angular-resource": "1.5.3",
+    "angular": "1.5.3",
+    "angular-ui-sortable": "0.14.0",
+    "jquery-ui": "1.11.4"
+  },
+  "resolutions": {
+    "angular": ">=1.4.0"
   }
 }
