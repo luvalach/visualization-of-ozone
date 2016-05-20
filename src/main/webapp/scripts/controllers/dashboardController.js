@@ -115,7 +115,9 @@ angular
 								});
 							}
 						};
-
+						
+						flash.cleanMessages();
+						
 						$scope.searchResults = DashboardResource
 								.query(
 										{

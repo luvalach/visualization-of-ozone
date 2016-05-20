@@ -19,7 +19,7 @@ angular.module('visualizationofozone').factory('flash',
 						messages.splice(index, 1);
 					}
 			    },
-				cleanMesssages : function() {
+				cleanMessages : function() {
 					messages = [];
 				},
 				setMessage : function(message) {
