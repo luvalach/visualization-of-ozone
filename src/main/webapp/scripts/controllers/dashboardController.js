@@ -97,12 +97,23 @@ angular
 					$scope.performSearch = function() {
 						var successCallback = function(data) {
 						}
-						var errorCallback = function() {
-							flash.setMessage({
-								'type' : 'error',
-								'text' : 'Could not download data.'
-							});
-							$scope.refreshListOfStations();
+						var errorCallback = function(response) {
+							if (response && response.data){
+								var fieldErrors = response.data.fieldErrors || [];
+								
+								for (i = 0; i < fieldErrors.length; i++) {
+									flash.setMessage({
+										'type' : fieldErrors[i].type,
+										'message' : fieldErrors[i].message,
+										'field' : fieldErrors[i].field
+									});
+								}
+							} else {
+								flash.setMessage({
+									'type' : 'error',
+									'text' : 'Could not download data.'
+								});
+							}
 						};
 
 						$scope.searchResults = DashboardResource

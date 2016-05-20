@@ -22,6 +22,7 @@ import cz.muni.fi.sdipr.visualizationofozone.dao.StationDao;
 import cz.muni.fi.sdipr.visualizationofozone.model.Measurement;
 import cz.muni.fi.sdipr.visualizationofozone.rest.dto.DataPerPhenomenonsDTO;
 import cz.muni.fi.sdipr.visualizationofozone.rest.dto.DataPerStationDTO;
+import cz.muni.fi.sdipr.visualizationofozone.rest.dto.ValidationErrorDto;
 
 /**
  * 
@@ -29,6 +30,9 @@ import cz.muni.fi.sdipr.visualizationofozone.rest.dto.DataPerStationDTO;
 @Stateless
 @Path("/dashboards")
 public class DashboardEndpoint {
+
+	public static final int MAX_STATATIONS = 0;
+	public static final int MAX_DAYS = 366;
 
 	@EJB
 	private StationDao stationDao;
@@ -60,6 +64,21 @@ public class DashboardEndpoint {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 
+		ValidationErrorDto validationErrorDTOs = new ValidationErrorDto();
+		if (stationIds.size() > MAX_STATATIONS) {
+			validationErrorDTOs.addFieldError("Stations",
+					"Maximum number of stations exceeded. Maximum is " + MAX_STATATIONS + ".");
+		}
+
+		if (daysBetween(fromDate, toDate) > MAX_DAYS) {
+			validationErrorDTOs.addFieldError("Time Span",
+					"Maximum number days exceeded. Maximum is " + MAX_DAYS + ".");
+		}
+
+		if (validationErrorDTOs.getFieldErrors().size() > 0) {
+			return Response.status(Status.BAD_REQUEST).entity(validationErrorDTOs).build();
+		}
+
 		if (stationIds.size() == 0 || (stationIds.size() == 1 && stationIds.get(0) == 0)) {
 			List<Long> allStationIds = stationDao.getAllIds();
 			stationIds = allStationIds;
@@ -84,5 +103,9 @@ public class DashboardEndpoint {
 		}
 
 		return Response.ok(dataPerPhenomenonsDTOs).build();
+	}
+
+	private int daysBetween(Date d1, Date d2) {
+		return (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
 	}
 }

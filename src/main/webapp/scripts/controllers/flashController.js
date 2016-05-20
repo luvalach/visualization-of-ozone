@@ -3,17 +3,13 @@
 angular.module('visualizationofozone').controller('FlashController', ['$scope','flash', function ($scope, flash) {
     $scope.flash = flash;
     $scope.showAlert = false;
+    $scope.messages = flash.messages;
 
-    $scope.$watch('flash.getMessage()', function(newVal) {
-        var message = newVal;
-        if(message && message.text) {
-            $scope.showAlert = message.text.length > 0;
-        } else {
-            $scope.showAlert = false;
-        }
+    $scope.$watch('flash.getMessages()', function(newVal) {
+    	$scope.messages = flash.getMessages();
     });
 
-    $scope.hideAlert = function() {
-        $scope.showAlert = false;
+    $scope.closeMessage = function(message) {
+    	flash.closeMessage(message);
     }
 }]);
