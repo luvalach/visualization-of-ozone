@@ -28,6 +28,16 @@ angular
 								title : {
 									"text" : ""
 								},
+								"crosshair-x" : {
+									"plot-label" : {
+										"visible" : false
+									},
+									"scale-label" : {
+										"backgroundColor" : "red",
+										"color" : "white",
+										"text" : "%scale-label"
+									}
+								},
 								plot : {
 									aspect : 'spline',
 									"tooltip" : {
@@ -41,10 +51,10 @@ angular
 									}
 								},
 								"legend" : {
-									"header":{
-								        "text":"Stations"
-								      },
-									"max-items" : 4,
+									"header" : {
+										"text" : "Stations"
+									},
+									"max-items" : 5,
 									"overflow" : "page",
 									"highlight-plot" : true,
 									"draggable" : true,
@@ -66,6 +76,7 @@ angular
 										// "all":"%m.%d.%Y",
 										"type" : "date"
 									},
+									"max-items" : 6,
 									"zooming" : true,
 									"zoom-snap" : true,
 								},
@@ -88,9 +99,9 @@ angular
 									}
 								},
 								"legend" : {
-									"header":{
-								        "text":"Stations"
-								      },
+									"header" : {
+										"text" : "Stations"
+									},
 									"max-items" : 8,
 									"overflow" : "page",
 									"highlight-plot" : true,
@@ -172,6 +183,8 @@ angular
 
 							this.refreshLineLabels = function() {
 								this.lineChart.title.text = $scope.phenomenon.description;
+								this.lineChart.plot['tooltip']['text'] = 'Value: %vt '
+									+ $scope.phenomenon.unitShortcut;
 								this.lineChart.plot['value-box']['text'] = '%v '
 										+ $scope.phenomenon.unitShortcut;
 								this.lineChart['scale-y']['label']['text'] = $scope.phenomenon.name
