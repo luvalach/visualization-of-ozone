@@ -2,7 +2,7 @@ angular
 		.module('visualizationofozone')
 		.controller(
 				'DashboardController',
-				function($scope, $http, $filter, StationResource,
+				function($scope, $http, $filter, $window, StationResource,
 						DashboardResource, PhenomenonTypeResource, flash) {
 
 					$scope.search = {
@@ -12,8 +12,10 @@ angular
 							endDate : moment()
 						}
 					};
-					$scope.searchResults = []; // data fetched from server
-												// (stations and measures)
+					/*
+					 * data fetched from server (stations and measures)
+					 */
+					$scope.searchResults = [];
 					$scope.panels = {
 						open1 : true, // filter
 						open2 : true, // chart
@@ -25,10 +27,8 @@ angular
 						name : 'All stations',
 						country : ''
 					};
-					$scope.stationList = [ $scope.allStationsItem ]; // all
-																		// stations
-																		// without
-																		// measures
+					/* all stations without measurements */
+					$scope.stationList = [ $scope.allStationsItem ];
 					$scope.search.stations = []; // Default filter setting
 
 					$scope.defaultPhenomenonSelection = {
@@ -98,9 +98,10 @@ angular
 						var successCallback = function(data) {
 						}
 						var errorCallback = function(response) {
-							if (response && response.data){
-								var fieldErrors = response.data.fieldErrors || [];
-								
+							if (response && response.data) {
+								var fieldErrors = response.data.fieldErrors
+										|| [];
+
 								for (i = 0; i < fieldErrors.length; i++) {
 									flash.setMessage({
 										'type' : fieldErrors[i].type,
@@ -115,9 +116,9 @@ angular
 								});
 							}
 						};
-						
+
 						flash.cleanMessages();
-						
+
 						$scope.searchResults = DashboardResource
 								.query(
 										{
@@ -246,6 +247,13 @@ angular
 							$scope.performSearch();
 						}
 					}
+
+					$scope.$watch(function() {
+						return $window.innerWidth;
+					}, function(value) {
+						$scope.wideMode = value > 750;
+						console.log(value);
+					});
 
 					$scope.refreshListOfStations();
 					$scope.refreshListOfPhenomenonTypes();
