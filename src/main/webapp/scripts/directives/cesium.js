@@ -17,7 +17,13 @@ angular
 							onClickWithCtrl : "&",
 							getPhenomenonById : "&"
 						},
+						template : '<div class="row" class="cesium" style="height: 380px;"></div><div class="row"><table style="width: 100%; text-align: center"><tr><td ng-repeat="sample in colorSampler" style=" background-color: rgb({{sample.color}})">{{sample.value}}</td></tr></table></div>',
 						controller : function($scope) {
+							$scope.minValue = 0;
+						    $scope.maxValue = 550;
+						    $scope.colorFrequency = 2*Math.PI/500;
+						    $scope.colorSampler = [];
+						    
 							/*
 							 * Refresh visualization of selected stations and
 							 * fly to last selected station. This function sets
@@ -109,6 +115,9 @@ angular
 												id : phenomenonData.phenomenonTypeId
 											});
 									var dataPerStations = phenomenonData.dataPerStations;
+									
+									this.setColorRange(phenomenonData.minValue, phenomenonData.maxValue);
+									this.generateColorSampler();
 								} else {
 									// No data found
 									return;
@@ -145,22 +154,73 @@ angular
 							 * Convert measurement value to Cesium.Color
 							 */
 							this.valueToColor = function(value) {
-								var frequency = .015;
-								var i = value + 100;
+								var frequency = $scope.colorFrequency;
+								var frequencyRed = frequency;
+								var frequencyGreen = frequency;
+								var frequencyBlue = frequency;
+								var i = value;
 
 								// Math.round(Math.sin(frequency*increment)*amplitude
 								// + center);
 								var red = Math.round(Math
-										.sin(frequency * i + 0) * 127 + 128);
-								var green = Math.round(Math.sin(frequency * i
+										.sin(frequencyRed * i + 0) * 127 + 128);
+								var green = Math.round(Math.sin(frequencyGreen * i
 										+ 2) * 127 + 128);
-								var blue = Math.round(Math.sin(frequency * i
+								var blue = Math.round(Math.sin(frequencyBlue * i
 										+ 4) * 127 + 128);
 
 								return new Cesium.Color.fromBytes(red, green,
 										blue, 255);
 							}
+							
+							
+							this.generateColorSampler = function() {
+								var min = Math.round($scope.minValue);
+								var max = Math.round($scope.maxValue);
+								var range = Math.abs(max-min);
+								var step = Math.round(range/10)
+								var colorSampler = [];
+								for(var i=min; i<= max; i=i+step){
+									var color = this.valueToColor(i);
+									var sample = {
+									    value: i,
+										color: "" + 255*color.red + "," + 255*color.green + "," + 255*color.blue	
+									}
+									colorSampler.push(sample);
+								}
+								$scope.colorSampler = colorSampler;
+							}
 
+							this.setColorRange = function(min, max){
+								if (min == undefined || max == undefined) {
+									var min = 100;
+									var max = 510;
+								}
+							    
+							    if (min == max ){
+							    	if (min < 100){
+							    		min = 0;
+							    		max = 100;
+							    	} else if (min < 500){
+							    		min = 0;
+							    		max = 550;
+							    	} else if (min < 1000){
+							    		min = 0;
+							    		max = 1100;
+							    	} else if (min < 3000){
+							    		min = 0;
+							    		max = 3100;
+							    	} else if (min < 6000){
+							    		min = 0;
+							    		max = 6100;
+							    	} 
+							    }
+							    
+							    $scope.minValue = min;
+							    $scope.maxValue = max;
+							    $scope.colorFrequency = 2*Math.PI/Math.abs((max-min)*1.3);
+							}
+							
 							/**
 							 * Return description as string/html. Entity is
 							 * mandatory parameter, others can be undefined.
@@ -214,6 +274,13 @@ angular
 								// Hack inserting picture of Mendel station
 								if (entity.name.match(/mendel/gi)) {
 									description += '</br>';
+									description += '<b>Links:</b>';
+									description += '</br>';
+									description += '<a href="http://www.sci.muni.cz/CARI/">Czech Antarctic Research Infrastructure</a>'
+									description += '</br>';
+									description += '<a href="http://polar.sci.muni.cz/en/home">Polar Research at Masaryk University</a>'
+									description += '</br>';
+									description += '</br>';
 									description += '<img class="hidden-xs img-responsive" src="img/mendel_station1.jpeg" width="100%" alt="Ozone visualization"></img></br>';
 								}
 
@@ -238,7 +305,7 @@ angular
 							ctrl.selectedOutlineWidth = 4;
 							ctrl.selectedOutlineColor = Cesium.Color.YELLOW;
 
-							ctrl.cesium = new Cesium.Viewer(element[0], {
+							ctrl.cesium = new Cesium.Viewer(element[0].firstChild, {
 								baseLayerPicker : true,
 								// Switching map source (Bing, OpenStreet etc.)
 								fullscreenButton : false,

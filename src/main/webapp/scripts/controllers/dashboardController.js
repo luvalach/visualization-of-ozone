@@ -16,11 +16,11 @@ angular
 					 * data fetched from server (stations and measures)
 					 */
 					$scope.searchResults = [];
+					$scope.wideMode = false;
 					$scope.panels = {
 						open1 : true, // filter
 						open2 : true, // chart
-						open3 : true
-					// globe
+						open3 : true // globe
 					};
 					$scope.allStationsItem = {
 						id : 0,
@@ -252,7 +252,6 @@ angular
 						return $window.innerWidth;
 					}, function(value) {
 						$scope.wideMode = value > 750;
-						console.log(value);
 					});
 
 					$scope.refreshListOfStations();
