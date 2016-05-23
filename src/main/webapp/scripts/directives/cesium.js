@@ -286,13 +286,6 @@ angular
 
 								return description;
 							}
-
-							// Sandcastle.addToolbarMenu([{
-							// text : 'Add billboard',
-							// onselect : function() {
-							// //addBillboard();
-							// //Sandcastle.highlight(addBillboard);
-							// }}]);
 						},
 						link : function(scope, element, attr, ctrl) {
 							ctrl.defaultPixelSize = 5;
@@ -305,6 +298,8 @@ angular
 							ctrl.selectedOutlineWidth = 4;
 							ctrl.selectedOutlineColor = Cesium.Color.YELLOW;
 
+							Cesium.BingMapsApi.defaultKey = 'AhFo-XkMy-RoFG4bf-O95SviLpbOxSDFDoeU4rcEg-X_reRVP1A4kpXXwEBkgwEA';
+							
 							ctrl.cesium = new Cesium.Viewer(element[0].firstChild, {
 								baseLayerPicker : true,
 								// Switching map source (Bing, OpenStreet etc.)
@@ -322,9 +317,6 @@ angular
 							var scene = ctrl.cesium.scene;
 							var handler = new Cesium.ScreenSpaceEventHandler(
 									scene.canvas);
-
-							// ctrl.cesium.fullscreenButton.viewModel.fullscreenElement
-							// = scene.canvas;
 
 							ctrl.cesium.screenSpaceEventHandler
 									.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
@@ -426,12 +418,6 @@ angular
 									newValue, oldValue) {
 								ctrl.refreshStationData(newValue, oldValue);
 							});
-
-							// ctrl.cesium.camera.flyTo({
-							// destination : new
-							// Cesium.Cartesian3.fromDegrees(-57.88,
-							// -63.8, 10000000)
-							// });
 						}
 					};
 				});

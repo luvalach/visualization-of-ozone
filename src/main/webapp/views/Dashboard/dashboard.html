@@ -1,75 +1,64 @@
 <div class="row">
-<uib-accordion class="col-xs-12 col-md-8" ng-class="{'pull-right': wideMode}">
-	<uib-accordion-group class="panel panel-info" is-open="panels.open3">
-      <uib-accordion-heading> Globe <i 
-         class="pull-right glyphicon"
-         ng-class="{'glyphicon-chevron-down': panels.open3, 'glyphicon-chevron-right': !panels.open3}"></i></uib-accordion-heading>
-      <div cesium-directive id="cesium1" class="cesiumContainer"
-         station-list="stationList" search-stations="search.stations" search-date="search.date.endDate" station-data="searchResults" on-double-click="onDoubleClick(entity)" on-click-with-ctrl="onClickWithCtrl(entity)" get-phenomenon-by-id="getPhenomenonById(id)" ></div>
-   </uib-accordion-group>
-</uib-accordion>
-   
-<uib-accordion class="col-xs-12 col-md-4" ng-class="{'pull-left': wideMode}">   
-   <uib-accordion-group
-      class="panel panel-info" is-open="panels.open1">
-      <uib-accordion-heading> Filter <i
-         class="pull-right glyphicon"
-         ng-class="{'glyphicon-chevron-down': panels.open1, 'glyphicon-chevron-right': !panels.open1}"></i></uib-accordion-heading>
-      <div class="row">
-      <div class="panel-body" style="padding-left:30px; padding-right:30px">
-         <h3>Search for data</h3>
-         <form id="MeasureSearch" class="form-horizontal">
-            <div class="form-group">
-               <label for="station" class="control-label">Station</label>
-                  <ui-select id="station" multiple ng-model="search.stations" theme="bootstrap" ng-disabled="disabled" on-select="stationSelectionChanged($item, $model)">
-                     <ui-select-match placeholder="Select stations...">{{$item.name}}, {{$item.country}}</ui-select-match>
-                     <ui-select-choices repeat="station.id as station in stationList | selectPropsFilter: {name: $select.search, country: $select.search}">
-                        <div ng-bind-html="station.name | highlight: $select.search"></div>
-                        <small>
-                        Country: <span ng-bind-html="station.country | highlight: $select.search"></span>
-                        </small>
-                     </ui-select-choices>
-                  </ui-select>
-            </div>
-            <div class="form-group">
-               <label for="datePicker">Time Span</label>
-               <input id="datePicker" date-range-picker class="form-control date-picker" type="text" ng-model="search.date" options="datePicker.opts" />
-            </div>
-            <div class="form-group">
-	            <label for="phenomenonTypes">Phenomenons</label>
-	            <div id="phenomenonTypes" class="controls">
-		           <label ng-repeat="phenomenon in phenomenonTypeList" class="checkbox col-xs-4 col-md-6" for="checkbox_{{phenomenon.id}}">
-					  <input type="checkbox" id="checkbox_{{phenomenon.id}}" ng-model="search.phenomenonTypes[phenomenon.id]"> {{phenomenon.name}}
-				   </label>
-	            </div>
-            </div>
-            <!--
+	<uib-accordion class="col-xs-12 col-md-8" ng-class="{'pull-right': wideMode}"> <uib-accordion-group
+		class="panel panel-info" is-open="panels.open3"> <uib-accordion-heading>
+	Globe <i class="pull-right glyphicon"
+		ng-class="{'glyphicon-chevron-down': panels.open3, 'glyphicon-chevron-right': !panels.open3}"></i></uib-accordion-heading>
+	<div cesium-directive id="cesium1" class="cesiumContainer" station-list="stationList" search-stations="search.stations"
+		search-date="search.date.endDate" station-data="searchResults" on-double-click="onDoubleClick(entity)"
+		on-click-with-ctrl="onClickWithCtrl(entity)" get-phenomenon-by-id="getPhenomenonById(id)"></div>
+	</uib-accordion-group> </uib-accordion>
+
+	<uib-accordion class="col-xs-12 col-md-4" ng-class="{'pull-left': wideMode}"> <uib-accordion-group
+		class="panel panel-info" is-open="panels.open1"> <uib-accordion-heading>
+	Filter <i class="pull-right glyphicon"
+		ng-class="{'glyphicon-chevron-down': panels.open1, 'glyphicon-chevron-right': !panels.open1}"></i></uib-accordion-heading>
+	<div class="row">
+		<div class="panel-body" style="padding-left: 30px; padding-right: 30px">
+			<h3>Search for data</h3>
+			<form id="MeasureSearch" class="form-horizontal">
+				<div class="form-group">
+					<label for="station" class="control-label">Station</label>
+					<ui-select id="station" multiple ng-model="search.stations" theme="bootstrap" ng-disabled="disabled"
+						on-select="stationSelectionChanged($item, $model)"> <ui-select-match placeholder="Select stations...">{{$item.name}},
+					{{$item.country}}</ui-select-match> <ui-select-choices
+						repeat="station.id as station in stationList | selectPropsFilter: {name: $select.search, country: $select.search}">
+					<div ng-bind-html="station.name | highlight: $select.search"></div>
+					<small> Country: <span ng-bind-html="station.country | highlight: $select.search"></span>
+					</small> </ui-select-choices> </ui-select>
+				</div>
+				<div class="form-group">
+					<label for="datePicker">Time Span</label> <input id="datePicker" date-range-picker class="form-control date-picker"
+						type="text" ng-model="search.date" options="datePicker.opts" />
+				</div>
+				<div class="form-group">
+					<label for="phenomenonTypes">Phenomenons</label>
+					<div id="phenomenonTypes" class="controls">
+						<label ng-repeat="phenomenon in phenomenonTypeList" class="checkbox col-xs-4 col-md-6"
+							for="checkbox_{{phenomenon.id}}"> <input type="checkbox" id="checkbox_{{phenomenon.id}}"
+							ng-model="search.phenomenonTypes[phenomenon.id]"> {{phenomenon.name}}
+						</label>
+					</div>
+				</div>
+				<!--
             <pre ng-bind="search | json"></pre>
-            <pre ng-bind="searchResults | json"></pre>  -->   
-            <div class="form-group">
-               <div class="col-md-offset-2 col-sm-10">
-                  <a id="Search" name="Search" class="btn btn-primary"
-                     ng-click="performSearch()"><span
-                     class="glyphicon glyphicon-search"></span> Search</a>
-               </div>
-            </div>
-         </form>
-      </div>
-      </div>
-   </uib-accordion-group>
-</uib-accordion>
-   
-<uib-accordion  class="col-xs-12 col-md-8" ng-class="{'pull-right': wideMode}">   
-   <uib-accordion-group class="panel panel-info" is-open="panels.open2">
-      <uib-accordion-heading>
-         Chart 
-         <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': panels.open2, 'glyphicon-chevron-right': !panels.open2}"></i> 
-      </uib-accordion-heading>
-      <ul ui-sortable="sortableOptions" ng-model="searchResults" style="padding: 0px">
-      	<div chart-directive ng-repeat="data in searchResults" data="data" station-list="stationList" phenomenon="getPhenomenonById(data.phenomenonTypeId)">
-      	</div>
-      </ul>
-   </uib-accordion-group>
-</uib-accordion>
+            <pre ng-bind="searchResults | json"></pre>  -->
+				<div class="form-group">
+					<a id="Search" name="Search" class="btn btn-primary" ng-click="performSearch()"><span
+						class="glyphicon glyphicon-search"></span> Search</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	</uib-accordion-group> </uib-accordion>
+
+	<uib-accordion class="col-xs-12 col-md-8" ng-class="{'pull-right': wideMode}"> <uib-accordion-group
+		class="panel panel-info" is-open="panels.open2"> <uib-accordion-heading>
+	Chart <i class="pull-right glyphicon"
+		ng-class="{'glyphicon-chevron-down': panels.open2, 'glyphicon-chevron-right': !panels.open2}"></i> </uib-accordion-heading>
+	<ul ui-sortable="sortableOptions" ng-model="searchResults" style="padding: 0px">
+		<div chart-directive ng-repeat="data in searchResults" data="data" station-list="stationList"
+			phenomenon="getPhenomenonById(data.phenomenonTypeId)"></div>
+	</ul>
+	</uib-accordion-group> </uib-accordion>
 
 </div>
