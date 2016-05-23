@@ -66,7 +66,8 @@ angular
 									"label" : {
 										"text" : ""
 									},
-									"markers" : []
+									"markers" : [],
+									"zooming" : true,
 								},
 								"scale-x" : {
 									"label" : {
