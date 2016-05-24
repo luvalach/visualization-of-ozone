@@ -17,7 +17,12 @@ angular
 							onClickWithCtrl : "&",
 							getPhenomenonById : "&"
 						},
-						template : '<div class="row" class="cesium" style="height: 380px;"></div><div class="row"><table style="width: 100%; text-align: center"><tr><td ng-repeat="sample in colorSampler" style=" background-color: rgb({{sample.color}})">{{sample.value}}</td></tr></table></div>',
+						template : '<div class="row" class="cesium" style="height: 380px;"></div>'
+								+ '<div class="row">'
+								+ '<table style="width: 100%; text-align: center">'
+								+ '<tr>'
+								+ '<td ng-repeat="sample in colorSampler" style=" background-color: rgb({{sample.color}})">{{sample.value}}</td>'
+								+ '</tr>' + '</table>' + '</div>',
 						controller : function($scope) {
 							$scope.minValue = 0;
 							$scope.maxValue = 550;
