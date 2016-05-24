@@ -35,6 +35,7 @@ public class DashboardEndpoint {
 	public static final int MAX_DAYS = 366;
 	public static final int MAX_DAYS_FOR_ALL_STATIONS = 3;
 	public static final int MAX_PHENOMENONS = 5;
+	public static final int MAX_PHENOMENONS_FOR_ALL_STATIONS = 1;
 
 	@EJB
 	private StationDao stationDao;
@@ -120,16 +121,19 @@ public class DashboardEndpoint {
 				validationErrorDTOs.addFieldError("Time Span", "You can select at most " + MAX_DAYS_FOR_ALL_STATIONS
 						+ " days when option 'All stations' is selected.");
 			}
+			if (phenomenonTypeIds.size() > MAX_PHENOMENONS_FOR_ALL_STATIONS) {
+				validationErrorDTOs.addFieldError("Phenomenons", "You can select at most "
+						+ MAX_PHENOMENONS_FOR_ALL_STATIONS + " phenomenons when option 'All stations' is selected.");
+			}
 		} else {
 			if (daysBetween(fromDate, toDate) > MAX_DAYS) {
 				validationErrorDTOs.addFieldError("Time Span",
 						"Maximum number of days exceeded. Maximum is " + MAX_DAYS + ".");
 			}
-		}
-
-		if (phenomenonTypeIds.size() > MAX_PHENOMENONS) {
-			validationErrorDTOs.addFieldError("Phenomenons",
-					"Maximum number of phenomenons exceeded. Maximum is " + MAX_PHENOMENONS + ".");
+			if (phenomenonTypeIds.size() > MAX_PHENOMENONS) {
+				validationErrorDTOs.addFieldError("Phenomenons",
+						"Maximum number of phenomenons exceeded. Maximum is " + MAX_PHENOMENONS + ".");
+			}
 		}
 
 		return validationErrorDTOs;
