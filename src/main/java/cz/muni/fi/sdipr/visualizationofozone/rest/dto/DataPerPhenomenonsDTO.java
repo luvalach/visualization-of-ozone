@@ -39,8 +39,8 @@ public class DataPerPhenomenonsDTO implements Serializable {
 		Float min = Float.MAX_VALUE;
 		Float max = Float.MIN_VALUE;
 		for (DataPerStationDTO dataPerStationDTO : stationData) {
-			min = Math.min(min, dataPerStationDTO.getLastMeasurementValue());
-			max = Math.max(max, dataPerStationDTO.getLastMeasurementValue());
+			min = Math.min(min, dataPerStationDTO.getMinValue());
+			max = Math.max(max, dataPerStationDTO.getMaxValue());
 		}
 		this.setMaxValue(max);
 		this.setMinValue(min);
