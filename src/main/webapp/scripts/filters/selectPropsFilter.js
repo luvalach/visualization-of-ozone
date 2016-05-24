@@ -9,23 +9,29 @@ angular.module('visualizationofozone').filter('selectPropsFilter', function() {
     var out = [];
 
     if (angular.isArray(items)) {
-      items.forEach(function(item) {
+      for (var i = 0; i < items.length; i++){
+    	var item = items[i];
         var itemMatches = false;
 
         var keys = Object.keys(props);
-        for (var i = 0; i < keys.length; i++) {
-          var prop = keys[i];
+        for (var k = 0; k < keys.length; k++) {
+          var prop = keys[k];
           var text = props[prop].toLowerCase();
+          
+          if(text == ''){
+        	  return items;
+          }
+          
           if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
             itemMatches = true;
             break;
           }
         }
 
-        if (itemMatches) {
+        if (itemMatches && out.length < 20) {
           out.push(item);
         }
-      });
+      };
     } else {
       // Let the output be the input untouched
       out = items;
