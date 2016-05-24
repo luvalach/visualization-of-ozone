@@ -18,7 +18,7 @@ public class MeasurementConvertor {
 		List<Number[]> measurementsArray = new ArrayList<Number[]>();
 
 		for (Measurement m : measurements) {
-			Float value = m.getValue() < -1000000000 ? null : m.getValue();
+			Float value = m.getValue() < -1000000000 ? 0 : m.getValue();
 			measurementsArray.add(new Number[] { m.getDateTime().getTime(), value });
 		}
 		return measurementsArray;
