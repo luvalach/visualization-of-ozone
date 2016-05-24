@@ -6,26 +6,24 @@ angular.module('visualizationofozone')
 function statisticsUtil() {
 	var util = {};
 
-	util.getMean = function(valuesArray) {
+	util.getMean = function(values) {
 		var sum = 0;
 
-		for (var i = 0; i < valuesArray.length; i++) {
-			sum += valuesArray[i][1];
+		for (var i = 0; i < values.length; i++) {
+			sum += values[i];
 		}
 
-		return sum / valuesArray.length;
+		return sum / values.length;
 	}
 
-	util.getMedian = function(valuesArray) {
+	util.getMedian = function(values) {
 		var median = 0;
-		var numbers = [];
-
-		for (var i = 0; i < valuesArray.length; i++) {
-			numbers.push(valuesArray[i][1]);
-		}
+		var numbers = values;
 
 		var numsLen = numbers.length;
-		numbers.sort(function(a, b){return a-b});
+		numbers.sort(function(a, b) {
+			return a - b
+		});
 
 		if (numsLen % 2 === 0) { // is even
 			// average of two middle numbers
@@ -34,6 +32,34 @@ function statisticsUtil() {
 			// middle number only
 			return numbers[(numsLen - 1) / 2];
 		}
+	}
+
+	util.getStandardDeviation = function(values, mean) {
+		var avg = mean || util.getMean(values);
+
+		var squareDiffs = values.map(function(value) {
+			var diff = value - avg;
+			var sqrDiff = diff * diff;
+			return sqrDiff;
+		});
+
+		var avgSquareDiff = util.getMean(squareDiffs);
+
+		var stdDev = Math.sqrt(avgSquareDiff);
+		return stdDev;
+	}
+
+	/**
+	 * Pull out measurements values from array of pair date-value.
+	 * Return single dimension array.
+	 */
+	util.separateValues = function(arrayOfDateValuePairs) {
+		var numbers = [];
+
+		for (var i = 0; i < arrayOfDateValuePairs.length; i++) {
+			numbers.push(arrayOfDateValuePairs[i][1]);
+		}
+		return numbers;
 	}
 
 	return util;
