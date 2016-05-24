@@ -25,6 +25,12 @@ angular
 								+ '</tr>' 
 								+ '</table>'
 								+ '</div>' 
+								+ '</div>'
+								+ '<div ng-show="hide" class="alert alert-info alert-dismissible" role="alert">'
+								+ '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+								+ '<span aria-hidden="true">&times;</span>'
+								+ '</button>'
+								+ '<strong>Info:</strong> The chart is hidden because all stations are selected.'
 								+ '</div>',
 						controller : function($scope) {
 							/**
@@ -178,9 +184,6 @@ angular
 									$scope.chart = this.lineChart;
 									$scope.hide = false;
 								} else {
-									// this.refreshBarSeries();
-									// this.refreshBarLabels();
-									// $scope.chart = null;
 									$scope.hide = true;
 								}
 							}
@@ -215,43 +218,6 @@ angular
 								this.lineChart.plot['value-box']['text'] = '%v'
 										+ $scope.phenomenon.unitShortcut;
 								this.lineChart['scale-y']['label']['text'] = $scope.phenomenon.name
-										+ ' ['
-										+ $scope.phenomenon.unitShortcut
-										+ ']';
-							}
-
-							this.refreshBarSeries = function() {
-								var dataPerStations = $scope.data.dataPerStations;
-								var chartData = [];
-								for (var i = 0; i < dataPerStations.length; i++) {
-									var stationId = dataPerStations[i].stationId;
-									var station = this
-											.getStationById(stationId);
-									var measurements = dataPerStations[i].measurements;
-									var measurementsLength = measurements.length;
-
-									if (station == null) {
-										$log.error('Station with id '
-												+ stationId + 'not found.');
-										continue;
-									}
-
-									if (measurementsLength > 0) {
-										var lastMeasurementIndex = measurementsLength - 1;
-										var newSeries = {
-											text : station.name,
-											values : [ measurements[lastMeasurementIndex][1] ]
-										}
-										chartData.push(newSeries);
-									}
-								}
-
-								this.barChart['series'] = chartData;
-							}
-
-							this.refreshBarLabels = function() {
-								this.barChart.title.text = $scope.phenomenon.description;
-								this.barChart['scale-y']['label']['text'] = $scope.phenomenon.name
 										+ ' ['
 										+ $scope.phenomenon.unitShortcut
 										+ ']';
