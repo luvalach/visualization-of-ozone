@@ -11,8 +11,8 @@ public class DataPerStationDTO {
 	@NotNull
 	private List<Number[]> measurements;
 
-	private Long lastMeasurementDate;
-	private Integer lastMeasurementValue;
+	private long lastMeasurementDate;
+	private float lastMeasurementValue;
 
 	public DataPerStationDTO(Long stationId) {
 		this.stationId = stationId;
@@ -34,16 +34,16 @@ public class DataPerStationDTO {
 		this.measurements = measurements;
 	}
 
-	public Number getLastMeasurementDate() {
+	public long getLastMeasurementDate() {
 		if (measurements.size() == 0)
-			return 0;
-		return measurements.get(measurements.size() - 1)[0];
+			return -1L;
+		return measurements.get(measurements.size() - 1)[0].longValue();
 	}
 
-	public int getLastMeasurementValue() {
+	public float getLastMeasurementValue() {
 		if (measurements.size() == 0)
-			return 0;
-		return measurements.get(measurements.size() - 1)[1].intValue();
+			return -1f;
+		return measurements.get(measurements.size() - 1)[1].floatValue();
 	}
 
 	@Override

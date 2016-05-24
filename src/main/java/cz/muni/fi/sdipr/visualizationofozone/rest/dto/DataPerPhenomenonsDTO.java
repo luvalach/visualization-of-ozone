@@ -14,8 +14,8 @@ public class DataPerPhenomenonsDTO implements Serializable {
 	@NotNull
 	private List<DataPerStationDTO> dataPerStations;
 
-	private Number minValue;
-	private Number maxValue;
+	private Float minValue;
+	private Float maxValue;
 
 	public DataPerPhenomenonsDTO(Long phenomenonTypeId, List<DataPerStationDTO> stationData) {
 		this.phenomenonTypeId = phenomenonTypeId;
@@ -36,8 +36,8 @@ public class DataPerPhenomenonsDTO implements Serializable {
 
 	public void setDataPerStations(List<DataPerStationDTO> stationData) {
 		this.dataPerStations = stationData;
-		int min = Integer.MAX_VALUE;
-		int max = Integer.MIN_VALUE;
+		Float min = Float.MAX_VALUE;
+		Float max = Float.MIN_VALUE;
 		for (DataPerStationDTO dataPerStationDTO : stationData) {
 			min = Math.min(min, dataPerStationDTO.getLastMeasurementValue());
 			max = Math.max(max, dataPerStationDTO.getLastMeasurementValue());
@@ -50,7 +50,7 @@ public class DataPerPhenomenonsDTO implements Serializable {
 		return minValue;
 	}
 
-	public void setMinValue(Number minValue) {
+	public void setMinValue(float minValue) {
 		this.minValue = minValue;
 	}
 
@@ -58,7 +58,7 @@ public class DataPerPhenomenonsDTO implements Serializable {
 		return maxValue;
 	}
 
-	public void setMaxValue(Number maxValue) {
+	public void setMaxValue(float maxValue) {
 		this.maxValue = maxValue;
 	}
 
