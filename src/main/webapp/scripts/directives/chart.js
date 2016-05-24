@@ -13,15 +13,37 @@ angular
 							stationList : "=",
 							phenomenon : "="
 						},
-						template : '<span class="pull-right glyphicon glyphicon-move sortable-handle"></span> <zingchart id="chart-{{phenomenon.id}}" zc-json="chart" zc-render="myRender" zc-width="100%"></zingchart>',
+						template : '<div ng-hide="hide">'
+								+ '<span class="pull-right glyphicon glyphicon-move sortable-handle"></span>'
+								+ '<zingchart id="chart-{{phenomenon.id}}" zc-json="chart" zc-render="myRender" zc-width="100%"></zingchart>'
+								+'<div ng-show="stationStatistics != null">'
+								+ '<table style="width: 100%; text-align: center">'
+								+ '<tr>'
+								+ '<td style=" background-color: rgb({{sample.color}})">Mean: {{stationStatistics.mean}}</td>'
+								+ '<td style=" background-color: rgb({{sample.color}})">Median: {{stationStatistics.median}}</td>'
+								+ '<td style=" background-color: rgb({{sample.color}})">Standard deviation: {{stationStatistics.standardDeviation}}</td>'
+								+ '</tr>' 
+								+ '</table>'
+								+ '</div>' 
+								+ '</div>',
 						controller : function($scope) {
 							/**
-							 * Limit of stations for line chart. If limit is
-							 * exceeded the bar chart is shown instead of line
-							 * chart.
+							 * Limit number of stations for chart. If limit is
+							 * exceeded the chart is hidden.
 							 */
 							const
-							LINE_CHART_LIMIT = 10;
+							CHART_LIMIT = 5;
+
+							/*
+							 * Hide chart
+							 */
+							$scope.hide = false;
+							/*
+							 * Carries statistics data like mean, median and
+							 * standard deviation. Statistics data will be
+							 * computed only for one station.
+							 */
+							$scope.stationStatistics = null;
 
 							this.lineChart = {
 								type : 'line',
@@ -106,7 +128,7 @@ angular
 									"max-items" : 8,
 									"overflow" : "page",
 									"highlight-plot" : true,
-									"draggable" : true,
+									"draggable" : false,
 									"tooltip" : {
 										"text" : "Click to show/hide series."
 									}
@@ -114,13 +136,15 @@ angular
 								"scale-y" : {
 									"label" : {
 										"text" : ""
-									}
+									},
+									"zooming" : true,
 								},
 								"scale-x" : {
 									"label" : {
 										"text" : "Stations",
 									},
-									"show-labels" : []
+									"show-labels" : [],
+									"zooming" : true,
 								},
 								"scroll-x" : {},
 								height : "100%",
@@ -147,15 +171,17 @@ angular
 							}
 
 							this.refresh = function() {
-								if ($scope.data.dataPerStations.length <= LINE_CHART_LIMIT) {
+								if ($scope.data.dataPerStations.length <= CHART_LIMIT) {
 									this.refreshLineSeries();
 									this.refreshLineLabels();
-									this.addStatisticsMarkers();
+									this.addStatistics();
 									$scope.chart = this.lineChart;
+									$scope.hide = false;
 								} else {
-									this.refreshBarSeries();
-									this.refreshBarLabels();
-									$scope.chart = this.barChart;
+									// this.refreshBarSeries();
+									// this.refreshBarLabels();
+									// $scope.chart = null;
+									$scope.hide = true;
 								}
 							}
 
@@ -185,8 +211,8 @@ angular
 							this.refreshLineLabels = function() {
 								this.lineChart.title.text = $scope.phenomenon.description;
 								this.lineChart.plot['tooltip']['text'] = 'Value: %vt '
-									+ $scope.phenomenon.unitShortcut;
-								this.lineChart.plot['value-box']['text'] = '%v '
+										+ '[' + $scope.phenomenon.unitShortcut + ']';
+								this.lineChart.plot['value-box']['text'] = '%v'
 										+ $scope.phenomenon.unitShortcut;
 								this.lineChart['scale-y']['label']['text'] = $scope.phenomenon.name
 										+ ' ['
@@ -231,6 +257,32 @@ angular
 										+ ']';
 							}
 
+							this.addStatistics = function() {
+								$scope.stationStatistics = null;
+								var series = this.lineChart['series'];
+								var datesAndValues = series[0]['values'];
+
+								if (series.length == 1) {
+									var values = statisticsUtil
+											.separateValues(datesAndValues);
+
+									var mean = statisticsUtil.getMean(values);
+									var median = statisticsUtil
+											.getMedian(values);
+									var stdDev = statisticsUtil
+											.getStandardDeviation(values);
+
+									this.addStatisticsMarkers(mean, median,
+											stdDev)
+
+									$scope.stationStatistics = {
+										mean : Math.round(mean*100,2) / 100, 
+										median : Math.round(median*100,2) / 100,
+										standardDeviation : Math.round(stdDev*100,2) / 100
+									}
+								}
+							}
+
 							/**
 							 * Function adds statistics markers (mean and median
 							 * values) to line chart. Statistics are added only
@@ -238,50 +290,68 @@ angular
 							 * data). This function is called during refreshing
 							 * of line chart.
 							 */
-							this.addStatisticsMarkers = function() {
-								var series = this.lineChart['series'];
-								var values = series[0]['values'];
-								if (series.length == 1) {
-									var markers = [];
+							this.addStatisticsMarkers = function(mean, median,
+									stdDev) {
+								var markers = [];
 
-									markers.push(this.getMeanMarker(values));
-									markers.push(this.getMedianMarker(values));
+								markers.push(this.getMeanMarker(mean));
+								markers.push(this.getMedianMarker(median));
+								markers.push(this.getDeviationMarker(mean
+										+ stdDev));
+								markers.push(this.getDeviationMarker(mean
+										- stdDev));
 
-									this.lineChart['scale-y']['markers'] = markers;
-								}
+								this.lineChart['scale-y']['markers'] = markers;
 							}
 
-							this.getMeanMarker = function(values) {
+							this.getMeanMarker = function(mean) {
 								var meanMarker = {
 									type : "line",
-									range : [ statisticsUtil.getMean(values) ],
+									range : [ mean ],
 									label : {
 										text : "Mean",
 										"color" : "red"
 									},
 									"line-color" : "red",
-									alpha : 0.5,
+									alpha : 1,
 									lineWidth : 2,
 									lineStyle : "dashed"
 								}
 								return meanMarker;
 							}
 
-							this.getMedianMarker = function(values) {
+							this.getMedianMarker = function(median) {
 								var medianMarker = {
 									type : "line",
-									range : [ statisticsUtil.getMedian(values) ],
+									range : [ median ],
 									label : {
 										text : "Median",
-										"color" : "blue",
+										"color" : "green",
 										"offset-x" : "30px",
 									},
-									"line-color" : "blue",
-									alpha : 0.5,
+									"line-color" : "green",
+									alpha : 1,
 									lineWidth : 2,
 									lineStyle : "dotted"
 								}
 								return medianMarker;
+							}
+
+							this.getDeviationMarker = function(valueOnY) {
+								var deviationMarker = {
+									type : "line",
+									range : [ valueOnY ],
+									label : {
+										text : "Std. dev.",
+										"color" : "red",
+										"offset-x" : "70px",
+									},
+									"line-color" : "red",
+									alpha : 1,
+									lineWidth : 2,
+									lineStyle : "dotted"
+								}
+								return deviationMarker;
 							}
 
 							this.refresh();
