@@ -43,7 +43,7 @@
             <pre ng-bind="search | json"></pre>
             <pre ng-bind="searchResults | json"></pre>  -->
 				<div class="form-group">
-					<a id="Search" name="Search" class="btn btn-primary" ng-click="performSearch()"><span
+					<a id="Search" name="Search" class="btn btn-primary" ng-disabled="loadingData" ng-click="performSearch()"><span
 						class="glyphicon glyphicon-search"></span> Search</a>
 				</div>
 			</form>

@@ -17,6 +17,7 @@ angular
 					 */
 					$scope.searchResults = [];
 					$scope.wideMode = false;
+					$scope.loadingData = false;
 					$scope.panels = {
 						open1 : true, // filter
 						open2 : true, // chart
@@ -96,9 +97,11 @@ angular
 
 					$scope.performSearch = function() {
 						var successCallback = function(data) {
+							$scope.loadingData = false;
 							$scope.searchResults = data;
 						}
 						var errorCallback = function(response) {
+							$scope.loadingData = false;
 							if (response && response.data) {
 								var fieldErrors = response.data.fieldErrors
 										|| [];
@@ -117,9 +120,11 @@ angular
 								});
 							}
 						};
-
+						
 						flash.cleanMessages();
-
+						//Lock Search button
+						$scope.loadingData = true;
+						
 						DashboardResource
 								.query(
 										{
