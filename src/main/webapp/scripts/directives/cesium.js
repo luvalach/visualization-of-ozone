@@ -183,6 +183,11 @@ angular
 								var range = Math.abs(max - min);
 								var step = Math.round(range / 10)
 								var colorSampler = [];
+
+								if (step <= 0) {
+									return;
+									// It can happens when max value is zero.
+								}
 								for (var i = min; i <= max; i = i + step) {
 									var color = this.valueToColor(i);
 									var sample = {
@@ -199,27 +204,30 @@ angular
 							this.setColorRange = function(min, max) {
 								if (min == undefined || max == undefined) {
 									var min = 100;
-									var max = 510;
+									var max = 500;
 								}
 
-								if (min == max) {
-									if (min < 100) {
-										min = 0;
-										max = 100;
-									} else if (min < 500) {
-										min = 0;
-										max = 550;
-									} else if (min < 1000) {
-										min = 0;
-										max = 1100;
-									} else if (min < 3000) {
-										min = 0;
-										max = 3100;
-									} else if (min < 6000) {
-										min = 0;
-										max = 6100;
-									}
+								// Predefined ranges for some values
+								if (max <= 1) {
+									min = 0;
+									max = 1;
+								} else if (max <= 100) {
+									min = 0;
+									max = 100;
+								} else if (max <= 500) {
+									min = 0;
+									max = 500;
+								} else if (max <= 1000) {
+									min = 0;
+									max = 1000;
+								} else if (max <= 1600) {
+									min = 0;
+									max = 1600;
+								} else if (max <= 2000) {
+									min = 0;
+									max = 2000;
 								}
+								// else let values as are
 
 								$scope.minValue = min;
 								$scope.maxValue = max;
