@@ -216,6 +216,9 @@ angular
 								if (max <= 1) {
 									min = 0;
 									max = 1;
+								} else if (max <= 20) {
+									min = 0;
+									max = 20;
 								} else if (max <= 100) {
 									min = 0;
 									max = 100;
