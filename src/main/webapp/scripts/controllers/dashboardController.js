@@ -76,7 +76,7 @@ angular
 					};
 
 					$scope.sortableOptions = {
-						handle : '> .sortable-handle'
+						handle : '>> .sortable-handle'
 					};
 
 					$scope.refreshListOfStations = function() {
@@ -96,6 +96,7 @@ angular
 
 					$scope.performSearch = function() {
 						var successCallback = function(data) {
+							$scope.searchResults = data;
 						}
 						var errorCallback = function(response) {
 							if (response && response.data) {
@@ -119,7 +120,7 @@ angular
 
 						flash.cleanMessages();
 
-						$scope.searchResults = DashboardResource
+						DashboardResource
 								.query(
 										{
 											stationIds : $scope.search.stations,
