@@ -134,7 +134,7 @@
 					<warName>visualization-of-ozone</warName>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
 				<version>0.0.27</version>
@@ -180,7 +180,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin-->
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.19.1</version>

@@ -6,7 +6,7 @@
 <title>Visualization-of-ozone</title>
 <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
-<link href="bower_components/cesium/CesiumUnminified/Widgets/widgets.css" rel="stylesheet" />
+<link href="bower_components/cesium/Cesium/Widgets/widgets.css" rel="stylesheet" />
 <link href="bower_components/ui-select/dist/select.min.css" rel="stylesheet" />
 <link href="bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
 <link href="styles/main.css" rel="stylesheet" media="screen">
@@ -75,6 +75,7 @@
     <script src="bower_components/angular-route/angular-route.min.js"></script>
     <script src="bower_components/angular-resource/angular-resource.min.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="bower_components/cesium/Cesium/Cesium.js"></script>
 
 	<!-- script src="bower_components/jquery/dist/jquery.js"></script>
 	<script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
@@ -83,13 +84,13 @@
 	<script src="bower_components/angular/angular.js"></script>
 	<script src="bower_components/angular-route/angular-route.js"></script>
 	<script src="bower_components/angular-resource/angular-resource.js"></script>
-	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script-->
+	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+	<script src="bower_components/cesium/CesiumUnminified/Cesium.js"></script-->
 
 	<script src="bower_components/ui-select/dist/select.min.js"></script>
 	<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="bower_components/zingchart/client/zingchart.min.js"></script>
 	<script src="bower_components/ZingChart-AngularJS/src/zingchart-angularjs.js"></script>
-	<script src="bower_components/cesium/CesiumUnminified/Cesium.js"></script>
 	<script src="bower_components/moment/moment.js"></script>
 	<script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 	<script src="bower_components/angular-daterangepicker/js/angular-daterangepicker.min.js"></script>
@@ -109,6 +110,7 @@
 	<script src="scripts/directives/chart.js"></script>
 	<script src="scripts/filters/geocoodinateFilter.js"></script>
 	<script src="scripts/services/statisticsUtilFactory.js"></script>
+	<script src="scripts/services/unsupportedBrowserDetector.js"></script>
 
 </body>
 </html>
