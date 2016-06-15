@@ -3,7 +3,7 @@ angular
 		.controller(
 				'DashboardController',
 				function($scope, $http, $filter, $window, StationResource,
-						DashboardResource, PhenomenonTypeResource, flash) {
+						DashboardResource, PhenomenonTypeResource, flash, unsupportedBrowserDetector) {
 
 					$scope.search = {
 						stations : [],
@@ -110,13 +110,15 @@ angular
 									flash.setMessage({
 										'type' : fieldErrors[i].type,
 										'message' : fieldErrors[i].message,
-										'field' : fieldErrors[i].field
+										'field' : fieldErrors[i].field,
+										'durable' : false
 									});
 								}
 							} else {
 								flash.setMessage({
 									'type' : 'error',
-									'text' : 'Could not download data.'
+									'text' : 'Could not download data.',
+									'durable' : false
 								});
 							}
 						};
@@ -259,7 +261,23 @@ angular
 					}, function(value) {
 						$scope.wideMode = value > 750;
 					});
-
+					
+					/**
+					 * Detect unsupported browser and show warning message 
+					 * when user using IE or Edge.
+					 */
+					$scope.detectUnsupportedBrowser = function() {
+						if(unsupportedBrowserDetector.isBrowserDeprecated()){
+							flash.setMessage({
+								'type' : 'WARNING',
+								'message' : 'You are using unsupported browser, application may works incorrectly. Please use Google Chrome or Opera.',
+								'field' : 'Warning',
+								'durable' : true
+							});
+						}
+					}
+					
 					$scope.refreshListOfStations();
 					$scope.refreshListOfPhenomenonTypes();
+					$scope.detectUnsupportedBrowser();
 				});

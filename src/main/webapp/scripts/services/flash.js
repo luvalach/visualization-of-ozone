@@ -20,7 +20,14 @@ angular.module('visualizationofozone').factory('flash',
 					}
 			    },
 				cleanMessages : function() {
-					messages = [];
+					for (var i = 0; i < messages.length; i++){
+						if (messages[i].hasOwnProperty('durable') && messages[i].durable){
+							continue;
+						} else {
+							messages.splice(i, 1);
+							i--;
+						}
+					}
 				},
 				setMessage : function(message) {
 					var messageType = message.type.toUpperCase();
