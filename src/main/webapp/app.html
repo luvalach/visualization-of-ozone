@@ -42,9 +42,14 @@
 				</div -->
 				<!-- main area-->
 				<div class="well mainarea">
+					<div class="alert alert-info" role="alert"
+							 style="display:block;" ng-style="{display:'none'}">
+							<span class="glyphicon glyphicon-exclamation-sign " aria-hidden="true"></span> <span class="sr-only">Info:</span>
+							Loading application, please wait.
+					</div>
 					<div ng-controller="FlashController">
 						<div class="alert alert-dismissible" ng-class="'alert-' + message.cssClass" role="alert"
-							ng-repeat="message in messages">
+							ng-repeat="message in messages" style="display:none;" ng-style="{display:'block'}">
 							<span class="glyphicon glyphicon-exclamation-sign " aria-hidden="true"></span> <span class="sr-only">{{message.type}}:</span>
 							<button type="button" class="close" ng-click="closeMessage(message)" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
